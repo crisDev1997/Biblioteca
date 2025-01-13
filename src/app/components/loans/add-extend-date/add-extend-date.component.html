@@ -1,0 +1,27 @@
+<div class="AddExtendContainer container p-4">
+    <div class="AddExtendHeader d-flex justify-content-center">
+        <p class="display-6">Ampliar este Prestamo:</p>
+    </div>
+    <form class="formAddUser p-5" [formGroup]="form" #formDirective="ngForm" (ngSubmit)="onSubmit(form.value)">
+        <div class="row mb-3 align-baseline" style="display: none;">
+            <p class="col-sm-3 d-flex justify-content-end">Id Devolucion:</p>
+            <input type="text" class="col-sm-4 d-flex justify-content-start" formControlName="id_devolucion" style="display: none;">
+        </div>
+        <div class="row mb-3 align-baseline" style="display: none;">
+            <p class="col-sm-3 d-flex justify-content-end">Fecha de Entrega Actual:</p>
+            <input type="date" class="col-sm-4 d-flex justify-content-start" formControlName="fecha_entrega_anterior" style="display: none;">
+        </div>
+        <div class="row mb-3 align-baseline" style="display: none;">
+            <p class="col-sm-3 d-flex justify-content-end">Fecha Actual:</p>
+            <input type="date" class="col-sm-4 d-flex justify-content-start" formControlName="fecha_ampliacion" >
+        </div>
+        <div class="row mb-3 align-baseline">
+            <p class="col-sm-5 d-flex justify-content-end">Fecha Nueva para la Entrega:</p>
+            <input type="date" class="col-sm-6 d-flex justify-content-start" formControlName="fecha_limite_ampliacion" >
+        </div>
+        <div class="btnAddUser row d-flex justify-content-evenly">
+            <button class="btn btn-primary mt-5 p-3 col-sm-4" type="submit" [disabled]="form.invalid">Ampliar Prestamo</button>
+            <button class="btn btn-secondary mt-5 p-3 col-sm-4" type="button" (click)="cancelExtendDate()" >Cancelar Ampliacion</button>
+        </div>
+    </form>
+</div>

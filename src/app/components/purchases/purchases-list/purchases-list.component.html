@@ -1,0 +1,213 @@
+<app-header-nav></app-header-nav>
+<div class="PurchasesListContainer container border border-dark mb-3">
+    <div class="OrdersListHeader container p-0">
+        <div class="row border-bottom border-dark  mb-3">
+            <p class="fs-1">Lista de Compras:</p>
+        </div>
+    </div>
+    <div class="LoansListFilter d-flex flex-row justify-content-evenly mt-3 pb-2 border-bottom border-dark">
+        <p class="fs-5 me-2">Filtrar Pedidos:</p>
+        <div class="form-check me-2">
+            <input class="form-check-input" type="radio" name="radio-button-orders" id="all-purchases" (click)="Filter('all')" checked>
+            <label class="form-check-label" for="all-purchases">
+              Todas las compras
+            </label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="radio-button-orders" id="my-purchases" (click)="Filter('my-purchases')"  >
+          <label class="form-check-label" for="my-purchases">
+              Mis Compras
+          </label>
+        </div>
+    </div>
+    <div class="OrderListNew d-flex flex-row justify-content-evenly mt-3 pb-2 border-bottom border-dark">
+        <button class="btn btn-success"  (click)="newPurchase(PurchaseForm)">Agregar compra</button>
+        <button class="btn btn-success"  data-bs-toggle="modal" data-bs-target="#addBookModal">Registrar nuevo libro</button>
+    </div>
+    <div  class="modal fade" id="addBookModal" tabindex="-1" aria-labelledby="exampleModalLabel"  aria-hidden="true">
+        <app-add-book-from-orders-list ></app-add-book-from-orders-list>
+    </div>
+    <div class="row LoanslistTable d-flex justify-content-center mt-3" *ngIf="check==='all'">
+        <p class="row">Lista de todas las compras:</p>
+          <table class="col-sm-12 table table-striped table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">Id_Compra</th>
+                  <th scope="col">Fecha de Compra:</th>
+                  <th scope="col">Carnet de Admin:</th>
+                  <th scope="col">Compra Solicitada por:</th>
+                  <th scope="col">Descripcion:</th>
+                
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let purchase of purchasesAll$ | async">
+                  <td>{{purchase.id_compra}}</td>
+                  <td ng-non-bindable>{{purchase.fecha_compra| date:'dd-MM-yyyy'}}</td>
+                  <td>{{purchase.admin_ci}}</td>
+                  <td>{{purchase.nomb_admin}}</td>
+                  <td>{{purchase.descripcion}}</td>
+                  <td><button class="btn btn-primary" (click)="ShowDetailsModal(purchase.id_compra,purchase.nomb_admin,purchase.descripcion,purchase.fecha_compra,DetailsModal)" >Ver Detalles </button></td>
+                </tr>
+              </tbody>
+            </table>
+      </div>
+      <div class="row LoanslistTable d-flex justify-content-center mt-3" *ngIf="check==='my-purchases'">
+        <p class="row">Mi lista de compras:</p>
+          <table class="col-sm-12 table table-striped table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">Id_Compra</th>
+                  <th scope="col">Fecha de Compra:</th>
+                  <th scope="col">Carnet de Admin:</th>
+                  <th scope="col">Compra registrada por:</th>
+                  <th scope="col">Descripcion:</th>
+                
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let purchase of purchasesAdmin$ | async">
+                  <td>{{purchase.id_compra}}</td>
+                  <td ng-non-bindable>{{purchase.fecha_compra| date:'dd-MM-yyyy'}}</td>
+                  <td>{{purchase.admin_ci}}</td>
+                  <td>{{purchase.nomb_admin}}</td>
+                  <td>{{purchase.descripcion}}</td>
+                  <td><button class="btn btn-primary" (click)="ShowDetailsModal(purchase.id_compra,purchase.nomb_admin,purchase.descripcion,purchase.fecha_compra,DetailsModal)" >Ver Detalles </button></td>
+                </tr>
+              </tbody>
+            </table>
+      </div>
+</div>
+<ng-template #DetailsModal let-modal>
+    <div class="modal-header mb-1">
+      <h4 class="modal-title" id="modal-basic-title">Detalles de Compra:</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+          <div class="d-flex flex-row justify-content-start">
+            <p class="pe-1 fw-bold" >Id Compra:</p>
+            <p class="">{{idCompra}}</p>
+          </div>
+          <div class="d-flex flex-row justify-content-start">
+            <p class="pe-1 fw-bold" >Compra registrada por :</p>
+            <p class="">{{nombAdmin}}</p>
+          </div>
+          <div class="d-flex flex-row justify-content-start">
+            <p class="pe-1 fw-bold" >Descripcion:</p>
+            <p class="">{{descCompra}}</p>
+          </div>
+          <div class="d-flex flex-row justify-content-start">
+              <p class="pe-1 fw-bold" >Fecha de Compra:</p>
+              <p class="" ng-non-bindable>{{fechaCompra | date: 'dd-MM-yyyy'}}</p>
+            </div>
+            <p class="fs-4 fw-bold">Detalles:</p>
+          <table class="col-sm-12 table table-striped table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Id_Detalle</th>
+                <th scope="col">Libro:</th>
+                <th scope="col">Cantidad Comprada:</th>
+                <th scope="col">Precio Unitario:</th>
+                <th scope="col">Subtotal:</th>
+              
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let detail of details$ | async">
+                <td>{{detail.id_compra_detalle}}</td>
+                <td>{{detail.libro}}</td>
+                <td>{{detail.cantidad}}</td>
+                <td>{{detail.precio_unitario}}</td>
+                <td>{{detail.subtotal}}</td>
+              </tr>
+            </tbody>
+          </table>
+
+
+        </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button"  id="btnClose1" class="btn btn-secondary"  (click)="modal.close('Save click')">Cancelar</button>
+    </div>
+  </ng-template>
+
+  <ng-template #PurchaseForm let-modal>
+    <div class="modal-header mb-1">
+      <h4 class="modal-title" id="modal-basic-title">Registrar nueva compra:</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="formPurchase" #formDirective="ngForm" (ngSubmit)="onSubmitPurchase()">
+        <div class="form-group">
+            <div style="display: none;">
+            <input   type="text" formControlName="id_admin">
+            </div>
+            <div style="display: none;">
+                <input   type="date" formControlName="fecha_compra">
+            </div>
+          
+            <div class="d-flex" >
+            <p class="pe-1 fw-bold" >Descripcion de Compra:</p>
+            <textarea class="w-75 mb-3" id="" cols="10" rows="5" formControlName="descripcion"></textarea>
+            </div>
+            <div class="d-flex" >
+              <p class="pe-1 fs-4" >Añadir Libros a compra:</p>
+            </div>
+            <div class="d-flex flex-column" >
+              <div class="d-flex" >
+              <p class="pe-1 fw-bold" >Añadir libro como detalle:</p>
+              <select  id="select-id-book" class="w-75 mb-3" (change)="changeIdBook($event)">
+                <option value="0">Seleccione un libro</option>
+                <option [value]="book.id" *ngFor="let book of booksAll$ | async" >{{book.titulo}}</option>
+              </select>
+              </div>
+              <div class="d-flex" >
+                <p class="pe-1 fw-bold" >Cantidad a comprar:</p>
+                <input type="text"  class="mb-2" #canCompra>
+              </div>
+              <div class="d-flex" >
+                <p class="pe-1 fw-bold" >Precio Unitario:</p>
+                <input type="text" class="mb-2" #compPrecio>
+              </div>
+              <div class="d-flex justify-content-center" >
+                <button class="btn btn-primary mb-4 w-25" type="button" (click)="AddPurchase(canCompra.value,compPrecio.value)">Añadir Detalle</button>
+              </div>
+            </div>
+            <table class="col-sm-12 table table-striped table-hover">
+                <thead>
+                  <tr>
+                    <th scope="col">Id_Libro</th>
+                    <th scope="col">Libro:</th>
+                    <th scope="col">Cantidad Comprada:</th>
+                    <th scope="col">Precio Unitario:</th>
+                    <th scope="col">Subtotal</th>
+                  
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let detail of AddDetailspurchases$ ">
+                    <td> {{detail._id_libro}}</td>
+                    <td>{{detail._libro}}</td>
+                    <td>{{detail._cantidad_compra}}</td>
+                    <td>{{detail._precio_unitario}}</td>
+                    <td>{{detail._subtotal}}</td>
+                    <td><button class="btn btn-danger" type="button" (click)="removeDetails(AddDetailspurchases$.indexOf(detail))">Quitar Detalle</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            <div class="row d-flex justify-content-center">
+                <button type="submit" class="btn btn-primary w-25" (click)="addPurchase()" [disabled]="formPurchase.invalid">Registrar Compra</button>
+            </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button"  id="btnClose2" class="btn btn-secondary"  (click)="modal.close('Save click')">Cancelar</button>
+    </div>
+  </ng-template>
+

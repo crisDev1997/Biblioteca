@@ -1,0 +1,23 @@
+<app-header-nav></app-header-nav>
+<div class="EditUserContainer container border border-dark mb-3 p-0">
+    <div class="headerEditUser d-flex justify-content-center border-bottom border-dark">
+        <p class="fs-1 mb-2">Perfil del Usuario</p>
+    </div>
+    <div class="row infoEditUserContent container d-flex p-5" *ngFor="let data of user$|async">
+        <p class="row fs-2">Informacion del Usuario: </p>
+        <p class="row ">Id del Usuario: {{data.id}} </p>
+        <p class="row ">Nombres: {{data.nombres}}</p>
+        <p class="row ">Apellidos: {{data.apellidos}}</p>
+        <p class="row " ng-non-bindable>Fecha de nacimiento: {{data.fec_nac | date: "dd-MM-yyyy"}}</p>
+        <p class="row ">Telefono: {{data.num_telf}}</p>
+        <p class="row " >Correo:  {{data.correo }}</p>
+        <p class="row ">Ultima Actividad:  {{data.observacion}}</p>
+        <p class="row ">Historial de Prestamo</p>
+        <textarea name="historial_prestamo" id="" cols="30" rows="10" class="row" disabled>{{data.historial_prestamo}}</textarea>
+        <div class="d-flex flex-row justify-content-evenly m-5">
+            <button class="btn btn-primary" (click)="navigateUpdateUser(data.ci)">Actualizar datos de usuario</button>
+            <button class="btn btn-secondary" (click)="banUser(data.ci)">Sancionar usuario</button>
+            <button class="btn btn-danger" (click)="deleteUser(data.ci)">Eliminar Usuario</button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,46 @@
+<app-header-nav></app-header-nav>
+<div class="AddLoanContainer container border border-dark">
+    <div class="AddLoanHeader container d-flex flex-row  justify-content-between p-3 border-bottom border-dark">
+        <p class="fs-1 fw-bold">Registrar Prestamo de Libro:</p>
+    </div>
+    <form class="formAddUser p-5" [formGroup]="form" #formDirective="ngForm" (ngSubmit)="onSubmit(form.value)">
+        <div class="row mb-3 align-baseline" >
+            <p class="col-sm-3 d-flex justify-content-end">Seleccionar Usuario:</p>
+            <select  (change)="changeIdUser($event)">
+                <option value="">Seleccione el nombre de la persona</option>
+                <option  [value]="user.id" *ngFor="let user of usersAllowed$ | async">{{user.nombres}} {{user.apellidos}}</option>
+            </select>
+        </div>
+        <div class="row mb-3 align-baseline" >
+            <p class="col-sm-3 d-flex justify-content-end">Seleccionar Libro:</p>
+            <select (change)="changeIdBook($event)" >
+                <option value="">Seleccione el libro</option>
+                <option [value]="book.id" *ngFor="let book of booksAvaible$ | async">{{book.titulo}}</option>
+            </select>
+        </div>
+        <div class="row mb-3 align-baseline" style="display: none;">
+            <p class="col-sm-3 d-flex justify-content-end">Id Usuario:</p>
+            <input type="text" class="col-sm-4 d-flex justify-content-start" formControlName="id_usuario" >
+        </div>
+        <div class="row mb-3 align-baseline" style="display: none;" >
+            <p class="col-sm-3 d-flex justify-content-end">Id Libro:</p>
+            <input type="text" class="col-sm-4 d-flex justify-content-start" formControlName="id_libro" >
+        </div>
+
+        <div class="row mb-3 align-baseline" >
+            <p class="col-sm-3 d-flex justify-content-end">Fecha Prestamo:</p>
+            <input type="date" class="col-sm-4 d-flex justify-content-start" formControlName="fecha_prestamo_persona" >
+        </div>
+        <div class="row mb-3 align-baseline">
+            <p class="col-sm-3 d-flex justify-content-end">Fecha para Entrega:</p>
+            <input type="date" class="col-sm-4 d-flex justify-content-start" formControlName="fecha_vencimiento_entrega" >
+        </div>
+        <div class="btnAddUser row d-flex justify-content-evenly">
+            <button class="btn btn-primary mt-5 p-3 col-sm-4" type="submit" [disabled]="form.invalid" >Registrar Prestamo</button>
+        </div>
+    </form>
+    
+</div>
+
+
+    

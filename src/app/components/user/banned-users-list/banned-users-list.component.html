@@ -1,0 +1,126 @@
+<app-header-nav></app-header-nav>
+<div class="BannedUserlistContainer container border border-dark">
+    <div class="BannedUserlistHeader container p-0">
+        <div class="row border-bottom border-dark  mb-3">
+            <p class="fs-1">Lista de Usuarios Sancionados</p>
+        </div>
+    </div>
+    <div class="BannedUserlistSearch d-flex flex-row justify-content-start align-baseline border-bottom border-dark pb-3">
+        <p class="display-10 me-2">Buscar Usuario:</p>
+        <input type="text"  class="forms-control" placeholder="Buscar.." [(ngModel)]="filterusers" name="filterusers">
+        <button class="btn btn-primary">Buscar</button>
+    </div>
+    <div class="BannedUserlistFilter d-flex flex-row justify-content-start mt-3 pb-2 border-bottom border-dark">
+        <p class="display-10 me-2">Filtrar Usuarios:</p>
+        <div class="form-check me-2">
+            <input class="form-check-input" type="radio" name="radio-button-banned-users" id="all-banned" (click)="Filter('all')" checked>
+            <label class="form-check-label" for="all-banned">
+            Todos los Sancionados
+            </label>
+        </div>
+        <div class="form-check me-2">
+            <input class="form-check-input" type="radio" name="radio-button-banned-users" id="banned-return" (click)="Filter('return')" >
+            <label class="form-check-label" for="banned-return">
+            Retornaron el libro
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="radio-button-banned-users" id="banned-not-return" (click)="Filter('not-return')" >
+            <label class="form-check-label" for="banned-not-return">
+            No retornaron el libro
+            </label>
+        </div>
+    </div>
+    <div class="row BannedUserslistTable d-flex justify-content-center mb-5 fs-9" *ngIf="check==='all'">
+        <p class="row">Todos los Usuarios sancionados:</p>
+        <table class="col-sm-11 table table-striped table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Nombres y Apellidos</th>
+                <th scope="col">Telefono</th>
+                <th scope="col">Correo</th>
+                <th scope="col">Razon sancion</th>
+                <th scope="col">Fecha Sancion</th>
+                <th scope="col">Fecha Fin</th>
+                <th scope="col">Ver Sancion</th>
+                
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let user of usersAll$ | async | filteruser:filterusers">
+                <td>{{user.id_usuario}}</td>
+                <td>{{user.nombres}} {{user.apellidos}}</td>
+                <td>{{user.num_telf}}</td>
+                <td>{{user.correo}}</td>
+                <td>{{user.razon_sancion}}</td>
+                <td ng-non-bindable>{{user.fecha_sancion | date:'dd-MM-yyyy'}}</td>
+                <td ng-non-bindable>{{user.fecha_fin_sancion==null? 'INDEFINIDA' :  user.fecha_fin_sancion | date:'dd-MM-yyyy'}}</td>
+                <td><button class="btn btn-primary" (click)="navigateViewBanned(user.ci)">Ver Sancion</button></td>
+              </tr>
+              
+            </tbody>
+          </table>
+    </div>
+    <div class="row BannedUserslistTable d-flex justify-content-center mb-5 fs-9" *ngIf="check==='return'">
+      <p class="row">Todos los Usuarios sancionados que no tienen que retornar libros:</p>
+      <table class="col-sm-11 table table-striped table-hover">
+          <thead>
+            <tr >
+              <th scope="col">Id</th>
+              <th scope="col">Nombres y Apellidos</th>
+              <th scope="col">Telefono</th>
+              <th scope="col">Correo</th>
+              <th scope="col">Razon sancion</th>
+              <th scope="col">Fecha Sancion</th>
+              <th scope="col">Fecha Fin</th>
+              <th scope="col">Ver Sancion</th>
+              </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of usersReturn$ | async | filteruser:filterusers">
+              <td>{{user.id_usuario}}</td>
+              <td>{{user.nombres}} {{user.apellidos}}</td>
+              <td>{{user.num_telf}}</td>
+              <td>{{user.correo}}</td>
+              <td>{{user.razon_sancion}}</td>
+              <td ng-non-bindable>{{user.fecha_sancion | date:'dd-MM-yyyy'}}</td>
+              <td ng-non-bindable>{{user.fecha_fin_sancion==null? 'INDEFINIDA' :  user.fecha_fin_sancion  | date:'dd-MM-yyyy'}}</td>
+              <td><button class="btn btn-primary" (click)="navigateViewBanned(user.ci)">Ver Sancion</button></td>
+            </tr>
+            
+          </tbody>
+        </table>
+  </div>
+    <div class="row BannedUserslistTable d-flex justify-content-center mb-5 fs-9" *ngIf="check==='not-return'">
+      <p class="row">Todos los Usuarios sancionados que no retornaron los libros:</p>
+      <table class="col-sm-11 table table-striped table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Id</th>
+              <th scope="col">Nombres y Apellidos</th>
+              <th scope="col">Telefono</th>
+              <th scope="col">Correo</th>
+              <th scope="col">Razon sancion</th>
+              <th scope="col">Fecha Sancion</th>
+              <th scope="col">Fecha Fin</th>
+              <th scope="col">Ver Sancion</th>
+              
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of usersNotReturn$ | async | filteruser:filterusers">
+              <td>{{user.id_usuario}}</td>
+                <td>{{user.nombres}} {{user.apellidos}}</td>
+                <td>{{user.num_telf}}</td>
+                <td>{{user.correo}}</td>
+                <td>{{user.razon_sancion}}</td>
+                <td ng-non-bindable>{{user.fecha_sancion | date:'dd-MM-yyyy'}}</td>
+                <td ng-non-bindable>{{user.fecha_fin_sancion==null? 'INDEFINIDA' :  user.fecha_fin_sancion | date:'dd-MM-yyyy'}}</td>
+                <td><button class="btn btn-primary" (click)="navigateViewBanned(user.ci)">Ver Sancion</button></td>
+            </tr>
+            
+          </tbody>
+        </table>
+  </div>
+</div>

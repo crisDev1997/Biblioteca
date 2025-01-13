@@ -1,0 +1,70 @@
+
+<app-header-nav></app-header-nav>
+<div class="UpdateUserContainer container border border-dark mb-5   ">
+    <div class="UpdateUserHeader container d-flex flex-row  justify-content-between p-3 border-bottom border-dark" *ngFor="let data of user$|async">
+        <p class="fs-1 fw-bold">Modificacion del Usuario</p>
+        <div class="col-sm-4 ">
+            <div class="row">
+                <p class="col-sm-8 fw-bold  text-end">Carnet de Identidad:</p><p class="col-sm-1 text-start">{{data.ci}}</p>
+            </div>
+            <div class="row">
+                <p class="col-sm-4 fw-bold text-end">Id User:</p><p class="col-sm-2">{{data.id}}</p>
+            </div>
+        </div>
+    </div>
+    <form class="UpdateUserContain container mb-5" [formGroup]="form"  #formDirective="ngForm" (ngSubmit)="onSubmit(form.value)" >
+        <div *ngFor="let data of user$|async">
+        <p class="fs-2 mb-3">Informacion del Usuario:</p>
+        <div class="col-sm-11">
+            <div class="row mb-3">
+                <p class="col-sm-2 fw-bold">Carnet de Identidad</p>
+                <input class="col-sm-5" type="text"  formControlName="ci" >
+            </div>
+            <div class="row mb-3">
+                <p class="col-sm-2 fw-bold">Nombres</p>
+                <input class="col-sm-5" type="text"  formControlName="nombres">
+            </div>
+            <div class="row mb-3">
+                <p class="col-sm-2 fw-bold">Apellidos</p>
+                <input class="col-sm-5" type="text"  formControlName="apellidos">
+            </div>
+            <div class="row mb-3">
+                <p class="col-sm-2 fw-bold">Fecha de Nacimiento:</p>
+                <input class="col-sm-5" type="date"  formControlName="fec_nac">
+            </div>
+            <div class="row mb-3">
+                <p class="col-sm-2 fw-bold">Telefono</p>
+                <input class="col-sm-5" type="text"  formControlName="num_telf">
+            </div>
+            <div class="row mb-3">
+                <p class="col-sm-2 fw-bold">Correo</p>
+                <input class="col-sm-7" type="text" formControlName="correo">
+            </div>
+            <div class="row mb-3" style="display: none;">
+                <p class="col-sm-2 fw-bold">Correo</p>
+                <input class="col-sm-7" type="text" formControlName="correo1">
+            </div>
+        </div>
+        <p class="fs-2 mb-3">Actividad del Usuario:</p>
+        <div class="col-sm-11">
+            <p class="fw-bold">Historial de Prestamos:</p>
+            <textarea class="col-sm-11 mb-5" formControlName="historial_prestamo" cols="20" rows="5">{{data.historial_prestamo}}</textarea>
+            <div class="row">
+                <p class="col-sm-3 fw-bold text-end">Ultima Actividad:</p>
+                <input type="text" formControlName="observacion" class="col-sm-5" value="{{data.observacion}}">
+            </div>
+            <div class="row message" id="message">
+                
+            </div>
+            <div class="d-flex flex-row justify-content-center m-5">
+                <button class="btn btn-success" type="submit">Actualizar datos</button>
+               
+            </div>
+            
+        </div>
+    </div>
+    </form>
+    <div class="d-flex flex-row justify-content-evenly m-5">
+    <button class="btn btn-danger"  (click)="resetForm()">Deshacer cambios</button>
+    </div>
+</div>

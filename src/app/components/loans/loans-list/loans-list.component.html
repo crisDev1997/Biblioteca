@@ -1,0 +1,204 @@
+<app-header-nav></app-header-nav>
+<div class="LoanslistContainer container border border-dark mb-3">
+    <div class="loanslistHeader container p-0">
+        <div class="row border-bottom border-dark  mb-3">
+            <p class="fs-1">Lista de Prestamos:</p>
+        </div>
+    </div>
+    <div class="BookslistSearch d-flex flex-row justify-content-start align-baseline border-bottom border-dark pb-3">
+      <p class="display-10 me-2">Buscar Libro/Usuario del prestamo:</p>
+      <input  type="text" class="forms-control" placeholder="Buscar.." [(ngModel)]="filterloans" name="filterloans">
+      <button class="btn btn-primary">Buscar</button>
+  </div>
+    <div class="LoansListFilter d-flex flex-row justify-content-evenly mt-3 pb-2 border-bottom border-dark">
+        <p class="fs-5 me-2">Filtrar Devoluciones:</p>
+        <div class="form-check me-2">
+            <input class="form-check-input" type="radio" name="radio-button-loans" id="all-loans" (click)="Filter('all')" checked>
+            <label class="form-check-label" for="all-loans">
+                Todas las Devoluciones
+            </label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="radio-button-loans" (click)="Filter('returned')" id="returned-loans" >
+          <label class="form-check-label" for="returned-loans">
+              Entregadas
+          </label>
+      </div>
+        <div class="form-check me-2">
+            <input class="form-check-input" type="radio" name="radio-button-loans" (click)="Filter('pending')" id="pending-loans" >
+            <label class="form-check-label" for="pending-loans">
+                Pendientes
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="radio-button-loans" (click)="Filter('expired')" id="expired-loans" >
+            <label class="form-check-label" for="expired-loans">
+                Vencidas
+            </label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="radio-button-loans" (click)="Filter('extended')" id="extended-loans" >
+          <label class="form-check-label" for="extended-loans">
+              Ampliadas
+          </label>
+      </div>
+
+    </div>
+    
+    <div class="row LoanslistTable d-flex justify-content-center mt-3" *ngIf="check==='all'">
+        <p class="row">Todas las Devoluciones:</p>
+          <table class="col-sm-12 table table-striped table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">Id_P</th>
+                  <th scope="col">Nombres y Apellidos</th>
+                  <th scope="col">Telefono</th>
+                  <th scope="col">Libro prestado</th>
+                  <th scope="col">Fecha del prestamo</th>
+                  <th scope="col">Fecha de entrega</th>
+                  <th scope="col">Status de Devolucion</th>
+                  <th scope="col">Ver Devolucion</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let loan of loansAll$ | async | filterloan:filterloans">
+                  <td>{{loan.id}}</td>
+                  <td>{{loan.nombres}} {{loan.apellidos}}</td>
+                  <td>{{loan.num_telf}}</td>
+                  <td>{{loan.titulo}}</td>
+                  <td ng-non-bindable>{{loan.fecha_prestamo_persona | date:'dd-MM-yyyy'}}</td>
+                  <td ng-non-bindable>{{loan.fecha_vencimiento_entrega| date:'dd-MM-yyyy'}}</td>
+                  <td>{{loan.status_devolucion==1? 'PENDIENTE' : 'ENTREGADA'}}</td>
+                  <td><button class="btn btn-primary" (click)="navigateViewLoan(loan.id)">Ver Prestamo </button></td>
+                  <td *ngIf='canMarkDelivered(loan.status_devolucion)'><button class="btn btn-secondary" (click)="changeStateLoan({id:loan.id,state_devolucion:2})">Marcar como Entregada</button></td>
+                  <td *ngIf='!canMarkDelivered(loan.status_devolucion)'><button class="btn btn-success" (click)="deleteLoan(loan.id)">Quitar Prestamo</button></td>
+                </tr>
+              </tbody>
+            </table>
+      </div>
+      <div class="row LoanslistTable d-flex justify-content-center mt-3" *ngIf="check==='returned'">
+        <p class="row">Todos los prestamos entregados:</p>
+          <table class="col-sm-12 table table-striped table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">Id_P</th>
+                  <th scope="col">Nombres y Apellidos</th>
+                  <th scope="col">Telefono</th>
+                  <th scope="col">Libro prestado</th>
+                  <th scope="col">Fecha del prestamo</th>
+                  <th scope="col">Fecha de entrega</th>
+                  <th scope="col">Status de Devolucion</th>
+                  <th scope="col">Ver Devolucion</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let loan of loansReturned$ | async | filterloan:filterloans">
+                  <td>{{loan.id}}</td>
+                  <td>{{loan.nombres}} {{loan.apellidos}}</td>
+                  <td>{{loan.num_telf}}</td>
+                  <td>{{loan.titulo}}</td>
+                  <td ng-non-bindable>{{loan.fecha_prestamo_persona | date:'dd-MM-yyyy'}}</td>
+                  <td ng-non-bindable>{{loan.fecha_vencimiento_entrega| date:'dd-MM-yyyy'}}</td>
+                  <td>{{loan.status_devolucion==1? 'PENDIENTE' : 'ENTREGADA'}}</td>
+                  <td><button class="btn btn-primary" (click)="navigateViewLoan(loan.id)">Ver Prestamo </button></td>
+                  <td *ngIf='!canMarkDelivered(loan.status_devolucion)'><button class="btn btn-success" (click)="deleteLoan(loan.id)">Quitar Prestamo</button></td>
+
+                </tr>
+              </tbody>
+            </table>
+      </div>
+      <div class="row LoanslistTable d-flex justify-content-center mt-3" *ngIf="check==='pending'">
+        <p class="row">Todos los prestamos pendientes:</p>
+          <table class="col-sm-12 table table-striped table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">Id_P</th>
+                  <th scope="col">Nombres y Apellidos</th>
+                  <th scope="col">Telefono</th>
+                  <th scope="col">Libro prestado</th>
+                  <th scope="col">Fecha del prestamo</th>
+                  <th scope="col">Fecha de entrega</th>
+                  <th scope="col">Status de Devolucion</th>
+                  <th scope="col">Ver Devolucion</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let loan of loansPending$ | async | filterloan:filterloans">
+                  <td>{{loan.id}}</td>
+                  <td>{{loan.nombres}} {{loan.apellidos}}</td>
+                  <td>{{loan.num_telf}}</td>
+                  <td>{{loan.titulo}}</td>
+                  <td ng-non-bindable>{{loan.fecha_prestamo_persona | date:'dd-MM-yyyy'}}</td>
+                  <td ng-non-bindable>{{loan.fecha_vencimiento_entrega| date:'dd-MM-yyyy'}}</td>
+                  <td>{{loan.status_devolucion==1? 'PENDIENTE' : 'ENTREGADA'}}</td>
+                  <td><button class="btn btn-primary" (click)="navigateViewLoan(loan.id)">Ver Prestamo </button></td>
+                  <td *ngIf='canMarkDelivered(loan.status_devolucion)'><button class="btn btn-secondary"  (click)="changeStateLoan({id:loan.id,state_devolucion:2})">Marcar como Entregada</button></td>
+                  <td *ngIf='!canMarkDelivered(loan.status_devolucion)'><button class="btn btn-success" (click)="deleteLoan(loan.id)">Quitar Prestamo</button></td>
+                </tr>
+              </tbody>
+            </table>
+      </div>
+      <div class="row LoanslistTable d-flex justify-content-center mt-3" *ngIf="check==='expired'">
+        <p class="row">Todos los prestamos vencidos no entregados:</p>
+          <table class="col-sm-12 table table-striped table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">Id_P</th>
+                  <th scope="col">Nombres y Apellidos</th>
+                  <th scope="col">Telefono</th>
+                  <th scope="col">Libro prestado</th>
+                  <th scope="col">Fecha del prestamo</th>
+                  <th scope="col">Fecha de entrega</th>
+                  <th scope="col">Status de Devolucion</th>
+                  <th scope="col">Ver Devolucion</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let loan of loansExpired$ | async | filterloan:filterloans">
+                  <td>{{loan.id}}</td>
+                  <td>{{loan.nombres}} {{loan.apellidos}}</td>
+                  <td>{{loan.num_telf}}</td>
+                  <td>{{loan.titulo}}</td>
+                  <td ng-non-bindable>{{loan.fecha_prestamo_persona | date:'dd-MM-yyyy'}}</td>
+                  <td ng-non-bindable>{{loan.fecha_vencimiento_entrega| date:'dd-MM-yyyy'}}</td>
+                  <td>{{loan.status_devolucion==1? 'PENDIENTE' : 'ENTREGADA'}}</td>
+                  <td><button class="btn btn-primary" (click)="navigateViewLoan(loan.id)">Ver Prestamo </button></td>
+                  <td *ngIf='canMarkDelivered(loan.status_devolucion)'><button class="btn btn-secondary" (click)="changeStateLoan({id:loan.id,state_devolucion:2})">Marcar como Entregada</button></td>
+                  <td *ngIf='!canMarkDelivered(loan.status_devolucion)'><button class="btn btn-success" (click)="deleteLoan(loan.id)">Quitar Prestamo</button></td>
+                </tr>
+              </tbody>
+            </table>
+      </div>
+      <div class="row LoanslistTable d-flex justify-content-center mt-3" *ngIf="check==='extended'">
+        <p class="row">Todos los prestamos ampliados:</p>
+          <table class="col-sm-12 table table-striped table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">Id_P</th>
+                  <th scope="col">Nombres y Apellidos</th>
+                  <th scope="col">Telefono</th>
+                  <th scope="col">Libro prestado</th>
+                  <th scope="col">Fecha del prestamo</th>
+                  <th scope="col">Fecha de entrega Anterior</th>
+                  <th scope="col">Fecha de entrega Actual</th>
+                  <th scope="col">Status de Devolucion</th>
+                  <th scope="col">Ver Devolucion</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let loan of loansExtended$ | async | filterloan:filterloans">
+                  <td>{{loan.id}}</td>
+                  <td>{{loan.nombres}} {{loan.apellidos}}</td>
+                  <td>{{loan.num_telf}}</td>
+                  <td>{{loan.titulo}}</td>
+                  <td ng-non-bindable>{{loan.fecha_prestamo_persona | date:'dd-MM-yyyy'}}</td>
+                  <td ng-non-bindable>{{loan.fecha_entrega_anterior | date:'dd-MM-yyyy'}}</td>
+                  <td ng-non-bindable>{{loan.fecha_vencimiento_entrega| date:'dd-MM-yyyy'}}</td>
+                  <td>{{loan.status_devolucion==1? 'PENDIENTE' : 'ENTREGADA'}}</td>
+                  <td><button class="btn btn-primary" (click)="navigateViewLoan(loan.id)">Ver Prestamo </button></td>
+                  
+                </tr>
+              </tbody>
+            </table>
+      </div>
+</div>

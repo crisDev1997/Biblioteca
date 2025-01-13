@@ -1,0 +1,72 @@
+<app-header-nav></app-header-nav>
+<div class="ReservationsListContainer container border border-dark mb-3">
+    <div class="ReservationsListHeader container p-0">
+        <div class="row border-bottom border-dark  mb-3">
+            <p class="fs-1">Lista de Reservaciones:</p>
+        </div>
+    </div>
+    <div class="row LoanslistTable d-flex justify-content-center mt-3">
+        <p class="row">Reservaciones de los usuarios:</p>
+        <table class="col-sm-6 table table-striped table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Carnet de Identidad</th>
+                <th scope="col">Nombres y Apellidos</th>
+                <th scope="col">Libro Reservado</th>
+                <th scope="col">Fecha que reservo el libro:</th>
+                
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let reserv of reservations$ | async">
+                <td>{{reserv.ci_usuario}} </td>  
+                <td>{{reserv.nomb_usuario}} </td>
+                <td>{{reserv.lib_reserv}}</td>
+                <td ng-non-bindable>{{reserv.fecha_limite_reserva | date:'dd-MM-yyyy'}}</td>
+                <td><button class="btn btn-primary" (click)="prestar(reserv.nomb_usuario,reserv.lib_reserv,reserv.id_usuario,reserv.id_libro,reserv.id,loanForm)">Prestar Libro</button></td>
+                <td><button class="btn btn-danger" (click)="delete(reserv.id)" *ngIf="canDelete(reserv.fecha_limite_reserva)">Eliminar Reservacion</button></td>
+              </tr>
+            </tbody>
+          </table>
+      </div>
+      <ng-template #loanForm let-modal>
+        <div class="modal-header mb-1">
+          <h4 class="modal-title" id="modal-basic-title">Prestar Libro:</h4>
+          <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="formLoan" #formDirective="ngForm" (ngSubmit)="onSubmitLoan()">
+            <div class="form-group">
+              <div class="row mb-3 align-baseline">
+                <p class="col-sm-6 d-flex justify-content-end" >Usuario: {{name_user}}</p>
+                <div style="display: none;">
+                <input  class="col-sm-1 d-flex justify-content-start" type="text" formControlName="id_usuario">
+                </div>
+              </div>
+              <div class="row mb-3 align-baseline">
+                <p class="col-sm-6 d-flex justify-content-end" >Libro: {{name_book}}</p>
+                <div style="display: none;">
+                <input  class="col-sm-1 d-flex justify-content-start" type="text" formControlName="id_libro">
+                </div>
+              </div>
+                <div class="row mb-3 align-baseline" >
+                    <p class="col-sm-3 d-flex justify-content-end" >Fecha del Prestamo:</p>
+                    <input class="col-sm-3 d-flex justify-content-start" placeholder="yyyy-mm-dd"  type="date" formControlName="fecha_prestamo_persona">
+                </div>
+                <div class="row mb-3 align-baseline" >
+                    <p class="col-sm-3 d-flex justify-content-end" >Fecha de Entrega:</p>
+                    <input class="col-sm-3 d-flex justify-content-start" placeholder="yyyy-mm-dd"  type="date" formControlName="fecha_vencimiento_entrega">
+                </div>
+                <div class="row d-flex justify-content-center">
+                    <button type="submit" class="btn btn-primary w-25" [disabled]="formLoan.invalid">Prestar Libro</button>
+                </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button"  id="btnClose1" class="btn btn-secondary"  (click)="modal.close('Save click')">Cancelar</button>
+        </div>
+      </ng-template>
+</div>

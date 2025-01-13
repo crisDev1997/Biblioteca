@@ -1,0 +1,56 @@
+<div class="AddBookFromOrderListContainer modal-dialog modal-lg" id="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Registrar Nuevo Libro:</h5>
+        <button type="button" id="btn-close-add-book" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form class="formAddJournal p-5" [formGroup]="form" #formDirective="ngForm" (ngSubmit)="onSubmit(form.value)">
+        <div class="modal-body">
+          <div class="row mb-3 align-baseline">
+              <p class="col-sm-3 d-flex justify-content-end">Nombre del libro:</p>
+              <input type="text" class="col-sm-4 d-flex justify-content-start w-50" formControlName="titulo" >
+            </div>
+  
+            <div class="row mb-3 align-baseline" >
+              <p class="col-sm-3 d-flex justify-content-end">Autor:</p>
+              <input type="text" class="col-sm-4 d-flex justify-content-start w-50" formControlName="autor" >
+            </div>
+            <div class="row mb-3 align-baseline" >
+                <p class="col-sm-3 d-flex justify-content-end">Genero:</p>
+                <input type="text" class="col-sm-4 d-flex justify-content-start w-50" formControlName="genero" >
+              </div>
+              <div class="row mb-3 align-baseline" *ngIf="!checkOrd">
+                <p class="col-sm-6 d-flex justify-content-end">Presione si el libro pertenecera a alguna seccion:</p>
+                <button (click)="checkOrd=true" class="btn btn-primary">Ordenar libro</button>
+            </div>
+            <div class="row mb-3 align-baseline" *ngIf="checkOrd">
+                <p class="col-sm-6 d-flex justify-content-end">Presione para no ordenar el libro:</p>
+                <button (click)="changeNull()" class="btn btn-danger">No ordenar</button>
+            </div>
+            <div class="row mb-3 align-baseline" *ngIf="checkOrd">
+                <p class="col-sm-3 d-flex justify-content-end">Seleccionar la seccion:</p>
+                <select (change)="changeIdSection($event)" >
+                    <option [value]="null">Seleccione una seccion</option>
+                    <option [value]="section.id_seccion" *ngFor="let section of sections$ | async">{{section.nombre_seccion}}</option>
+            </select>
+            </div>
+            <div class="row mb-3 align-baseline" style="display: none;">
+                <p class="col-sm-3 d-flex justify-content-end">Seccion:</p>
+                <input type="text" class="col-sm-4 d-flex justify-content-start" formControlName="id_seccion">
+            </div>
+            <div class="row mb-3 align-baseline" style="display: none;">
+                <p class="col-sm-3 d-flex justify-content-end" >Cantidad del libro:</p>
+                <input type="text" class="col-sm-4 d-flex justify-content-start" formControlName="cantidad" placeholder="Ej: 2">
+            </div>
+            <div class="row mb-3 align-baseline">
+                <p class="col-sm-6 d-flex justify-content-end">Link de referencia para descarga/compra:</p>
+                <textarea name="" id="" cols="20" rows="4" formControlName="link_pdf_ref" placeholder="Ej: www.google.com"></textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="btnClose" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Registrar Libro</button>
+        </div>
+      </form>
+    </div>
+</div>

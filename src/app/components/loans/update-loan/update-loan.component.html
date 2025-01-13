@@ -1,0 +1,57 @@
+<div class="UpdateLoanContainer modal-dialog modal-lg" id="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modificar Prestamo:</h5>
+        <button type="button" id="btn-close" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form class="formUpdateLoan p-5" [formGroup]="form" #formDirective="ngForm" (ngSubmit)="onSubmit(form.value)">
+      <div class="modal-body">
+       
+        <div class="row mb-3 align-baseline" >
+            <p class="col-sm-3 d-flex justify-content-end">Seleccionar Usuario:</p>
+            <select  (change)="changeIdUser($event)">
+                <option value="">Seleccione el nombre de la persona</option>
+                <option [value]="idUserSelected" selected>{{valueUserSelected}}</option>
+                <option  [value]="user.id" *ngFor="let user of usersAllowed$ | async">{{user.nombres}} {{user.apellidos}}</option>
+            </select>
+        </div>
+        <div class="row mb-3 align-baseline" >
+            <p class="col-sm-3 d-flex justify-content-end">Seleccionar Libro:</p>
+            <select (change)="changeIdBook($event)" >
+                <option value="null">Seleccione el libro</option>
+                <option [value]="idBookSelected" selected>{{valueBookSelected}}</option>
+                <option [value]="book.id" *ngFor="let book of booksAvaible$ | async">{{book.titulo}}</option>
+                <option [value]="journal.id" *ngFor="let journal of journalsAvaible$ | async">{{journal.titulo}}: {{journal.titular}}</option>
+            </select>
+        </div>
+        <div class="row mb-3 align-baseline" style="display: none;">
+            <p class="col-sm-3 d-flex justify-content-end">Id Usuario:</p>
+            <input type="text" class="col-sm-4 d-flex justify-content-start" formControlName="id_usuario" >
+        </div>
+        <div class="row mb-3 align-baseline" style="display: none;" >
+            <p class="col-sm-3 d-flex justify-content-end">Id Libro:</p>
+            <input type="text" class="col-sm-4 d-flex justify-content-start" formControlName="id_libro" >
+        </div>
+
+        <div class="row mb-3 align-baseline" >
+            <p class="col-sm-3 d-flex justify-content-end">Fecha Prestamo:</p>
+            <input type="date" class="col-sm-4 d-flex justify-content-start" formControlName="fecha_prestamo_persona" >
+        </div>
+        <div class="row mb-3 align-baseline">
+            <p class="col-sm-3 d-flex justify-content-end">Fecha para Entrega:</p>
+            <input type="date" class="col-sm-4 d-flex justify-content-start" formControlName="fecha_vencimiento_entrega" >
+        </div>
+        <div class="row mb-3 align-baseline" style="display: none;"> 
+            <p class="col-sm-3 d-flex justify-content-end">Status Devolucion:</p>
+            <input type="text" class="col-sm-4 d-flex justify-content-start" formControlName="status_devolucion" >
+        </div>
+         
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="btnClose" data-bs-dismiss="modal">Cancelar</button>
+
+        <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Actualizar Prestamo</button>
+      </div>
+    </form>
+    </div>
+  </div>

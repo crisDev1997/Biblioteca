@@ -1,0 +1,128 @@
+<app-header-nav></app-header-nav>
+<div class="BookslistContainer container border border-dark mb-4">
+    <div class="BooklistHeader container p-0">
+        <div class="row border-bottom border-dark  mb-3">
+            <p class="fs-1">Lista de libros</p>
+        </div>
+    </div>
+    <div class="BookslistSearch d-flex flex-row justify-content-start align-baseline border-bottom border-dark pb-3">
+        <p class="display-10 me-2">Buscar Libro:</p>
+        <input  type="text" class="forms-control" placeholder="Buscar.." [(ngModel)]="filterbooks" name="filterbooks">
+        <button class="btn btn-primary">Buscar</button>
+    </div>
+    <div class="BookslistFilter d-flex flex-row justify-content-start mt-3 pb-2 border-bottom border-dark">
+        <p class="display-10 me-2">Filtrar Libros:</p>
+        <div class="form-check me-2">
+            <input class="form-check-input" type="radio" name="radio-button-banned-users" id="all-banned" (click)="Filter('all')" checked>
+            <label class="form-check-label" for="all-banned">
+            Todos los Libros
+            </label>
+        </div>
+        <div class="form-check me-2">
+            <input class="form-check-input" type="radio" name="radio-button-banned-users" id="banned-return" (click)="Filter('avaible')" >
+            <label class="form-check-label" for="banned-return">
+            Libros disponibles
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="radio-button-banned-users" id="banned-not-return" (click)="Filter('not-avaible')" >
+            <label class="form-check-label" for="banned-not-return">
+            Libros no disponibles
+            </label>
+        </div>
+    </div>
+    <div class="row BookslistTable d-flex justify-content-center mb-5 fs-9" *ngIf="check==='all'">
+        <p class="row">Todos los libros en Biblioteca:</p>
+        <table class="col-sm-11 table table-striped table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Titulo libro</th>
+                <th scope="col">Autor</th>
+                <th scope="col">Genero</th>
+                <th scope="col">Seccion</th>
+                <th scope="col">Cantidad Biblioteca</th>
+                <th scope="col">Cantidad Disponible</th>
+                <th scope="col">Link/Ref del Libro</th>
+                <th scope="col">Ver Libro</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let book of booksAll$ | async | filterbook:filterbooks">
+                <td>{{book.id}}</td>
+                <td>{{book.titulo}} </td>
+                <td>{{book.autor}}</td>
+                <td>{{book.genero}}</td>
+                <td>{{book.nombre_seccion==null? 'No ordenado' : book.nombre_seccion}}</td>
+                <td>{{book.cantidad}}</td>
+                <td>{{book.disponibles}}</td>
+                <td><button class="btn btn-primary" (click)="navigateViewPdf(book.link_pdf_ref)">Ver Pdf/Ref</button></td>
+                <td><button class="btn btn-primary" (click)="navigateViewBook(book.id)">Ver Libro</button></td>
+                 
+              </tr>
+            </tbody>
+          </table>
+    </div>
+    <div class="row BookslistTable d-flex justify-content-center mb-5 fs-9" *ngIf="check==='avaible'">
+        <p class="row">Todos los libros disponibles para prestar:</p>
+        <table class="col-sm-11 table table-striped table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Titulo libro</th>
+                <th scope="col">Autor</th>
+                <th scope="col">Genero</th>
+                <th scope="col">Seccion</th>
+                <th scope="col">Cantidad Biblioteca</th>
+                <th scope="col">Cantidad Disponible</th>
+                <th scope="col">Link/Ref del Libro</th>
+                <th scope="col">Ver Libro</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let book of booksAvaible$ | async | filterbook:filterbooks">
+                <td>{{book.id}}</td>
+                <td>{{book.titulo}}</td>
+                <td>{{book.autor}}</td>
+                <td>{{book.genero}}</td>
+                <td>{{book.nombre_seccion}}</td>
+                <td>{{book.cantidad}}</td>
+                <td>{{book.disponibles}}</td>
+                <td><button class="btn btn-primary" (click)="navigateViewPdf(book.link_pdf_ref)">Ver Pdf/Ref</button></td>
+                <td><button class="btn btn-primary" (click)="navigateViewBook(book.id)">Ver Libro</button></td>
+              </tr>
+            </tbody>
+          </table>
+    </div>
+    <div class="row BookslistTable d-flex justify-content-center mb-5 fs-9" *ngIf="check==='not-avaible'">
+        <p class="row">Todos los libros en Biblioteca:</p>
+        <table class="col-sm-11 table table-striped table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Titulo libro</th>
+                <th scope="col">Autor</th>
+                <th scope="col">Genero</th>
+                <th scope="col">Seccion</th>
+                <th scope="col">Cantidad Biblioteca</th>
+                <th scope="col">Cantidad Disponible</th>
+                <th scope="col">Link/Ref del Libro</th>
+                <th scope="col">Ver Libro</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let book of booksNotAvaible$ | async | filterbook:filterbooks">
+                <td>{{book.id}}</td>
+                <td>{{book.titulo}}</td>
+                <td>{{book.autor}}</td>
+                <td>{{book.genero}}</td>
+                <td>{{book.nombre_seccion}}</td>
+                <td>{{book.cantidad}}</td>
+                <td>{{book.disponibles}}</td>
+                <td><button class="btn btn-primary" (click)="navigateViewPdf(book.link_pdf_ref)">Ver Pdf/Ref</button></td>
+                <td><button class="btn btn-primary" (click)="navigateViewBook(book.id)">Ver Libro</button></td>
+              </tr>
+            </tbody>
+          </table>
+    </div>
+</div>

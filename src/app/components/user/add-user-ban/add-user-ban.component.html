@@ -1,0 +1,69 @@
+<app-header-nav></app-header-nav>
+<div class="AddUserBanContainer container border border-dark mb-5" >
+    <div class="AddUserBanHeader container d-flex flex-row  justify-content-between p-3 border-bottom border-dark">
+        <p class="fs-1 fw-bold">Sancionar Usuario:</p>
+        
+    </div>
+    <div class="row infoUserBanContent container d-flex p-3" *ngFor="let data of user$|async">
+        <p class="p-1 fs-4">Datos para sancion: </p>
+        <form [formGroup]="form"  #formDirective="ngForm" (ngSubmit)="onSubmit(form.value)">
+        <div class="d-flex flex-nowrap bd-highlight">
+            <p class="pe-1 fw-bold">Id del Usuario:</p>
+            <p>{{data.id}}</p>
+            <input type="text" formControlName="id_usuario" style="display: none;">
+        </div>
+        <div class="d-flex flex-nowrap bd-highlight">
+            <p class="pe-1 fw-bold">Nombres y Apellidos: </p>
+            <p>{{data.nombres}} {{data.apellidos}}</p>
+        </div>
+        
+        <div class="d-flex flex-nowrap bd-highlight">
+            <p class="pe-1 fw-bold">Carnet del Usuario: </p>
+            <p>{{data.ci}}</p>
+        </div>
+        <div class="d-flex flex-nowrap bd-highlight">
+            <p class="pe-1">Fecha por defecto: </p>
+        </div>
+        <div class="d-flex flex-nowrap bd-highlight mb-3">
+            <p class="pe-1 fw-bold">Fecha de Sancion: </p>
+            <input type="date" formControlName="fecha_sancion">
+        </div>
+        <div class="d-flex flex-column bd-highlight mb-5">
+            <p class="p-1 fw-bold">Describe la razon de la sancion: </p>
+            <textarea class="p-1" formControlName="razon_sancion" id="razon_sancion" cols="20" rows="5" ></textarea>
+        </div>
+        <div class="d-flex flex-nowrap bd-highlight mb-1">
+            <p class="p-1 fs-4">Sancion por no retorno de libro:</p>
+            
+        </div>
+        <div class="d-flex flex-nowrap bd-highlight mb-3">
+            <p class="Paragraph pe-4 fw-bold">Presione si el usuario no retorno el libro: </p>
+            <button type="button" class="ButtonDev btn btn-danger" (click)="ChangeReturn()">Marcar como no Retorno</button>
+            
+        </div>
+        <div class="d-flex flex-column bd-highlight mb-5" >
+            <input type="text" formControlName="id_devolucion" class="w-25" style="display: none;">
+        </div>
+        
+        <div class="d-flex flex-nowrap bd-highlight mb-1">
+            <p class=" fs-4">Fecha de finalizacion de sancion: </p>
+        </div>
+        
+        <div class="d-flex flex-nowrap justify-content-evenly bd-highlight mb-1">
+            <button type="button" class="ButtonEndDate btn btn-primary" (click)="SetEndBanDate()">Establecer fecha fin</button>
+        </div>
+        <div class="d-flex flex-column bd-highlight mb-1" *ngIf="EndBanDate">
+            <p>Seleccione la fecha de finalizacion de la sancion:</p>
+            <div class="d-flex flex-nowrap bd-highlight mb-2" id="SetEndBan">
+                <p class="pe-1 fw-bold" >Fecha de finalizacion: </p>
+                <input type="date" name="setFechafin" id='setFechafin' formControlname="fecha_fin_sancion" (change)="SetEndDate($event)">
+            </div>
+                
+        </div>
+        <div class="d-flex flex-nowrap justify-content-center bd-highlight mb-3">
+            <button class="btn btn-success" type="submit" [disabled]="form.invalid">Sancionar Usuario</button>
+
+        </div>
+    </form>
+    </div>
+</div>

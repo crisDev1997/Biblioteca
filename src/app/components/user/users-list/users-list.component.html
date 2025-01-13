@@ -1,0 +1,114 @@
+<app-header-nav></app-header-nav>
+<div class="UserlistContainer container border border-dark my-5">
+    <div class="UserlistHeader container p-0">
+        <div class="row border-bottom border-dark  mb-3">
+            <p class="display-5">Lista de Usuarios</p>
+        </div>
+    </div>
+    <div class="UserlistSearch d-flex flex-row justify-content-start align-baseline border-bottom border-dark pb-3">
+        <p class="display-10 me-2">Buscar Usuario:</p>
+        <input type="text"  class="forms-control" placeholder="Buscar.." [(ngModel)]="filterusers" name="filterusers">
+        <button class="btn btn-primary">Buscar</button>
+    </div>
+    <div class="UserlistFilter d-flex flex-row justify-content-start mt-3 pb-2 border-bottom border-dark">
+        <p class="display-10 me-2">Filtrar Usuarios:</p>
+        <div class="form-check me-2">
+            <input class="form-check-input" type="radio" name="radio-button-users" id="all-users" (click)="Filter('all')" checked>
+            <label class="form-check-label" for="all-users">
+            Todos los Usuarios
+            </label>
+        </div>
+        <div class="form-check me-2">
+            <input class="form-check-input" type="radio" name="radio-button-users" id="allowed-users" (click)="Filter('allowed')">
+            <label class="form-check-label" for="allowed-users">
+            Usuarios permitidos prestarse
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="radio-button-users" id="banned-users" (click)="Filter('banned')" >
+            <label class="form-check-label" for="banned-users">
+            Usuarios sancionados
+            </label>
+        </div>
+    </div>
+    <div class="row UserslistTable d-flex justify-content-center mt-3" *ngIf="check==='all'" >
+      <p class="row">Todos los Usuarios:</p>
+      <table class="table table-striped .w-auto" >
+        <thead>
+          <tr>
+            <th scope="col">CI</th>
+            <th scope="col">Id_User</th>
+            <th scope="col">Nombres y Apellidos</th>
+            <th scope="col">Telefono</th>
+            <th scope="col">Correo</th>
+            <th scope="col">Perfil</th>
+          </tr>
+        </thead>
+        <tbody >
+          <tr *ngFor="let user of users$ | async | filteruser:filterusers">
+            <td>{{user.ci}}</td>
+            <td>{{user.id}}</td>
+            <td>{{user.nombres}} {{user.apellidos}}</td>
+            <td>{{user.num_telf}}</td>
+            <td>{{user.correo}}</td>
+            <td><button class="btn btn-primary" (click)="navigateViewUser(user.ci)">Ver Usuario</button></td>
+          </tr>
+        
+        </tbody>
+      </table>
+    </div>
+    <div class="row AllowedUserslistTable d-flex justify-content-center" *ngIf="check==='allowed'">
+      <p class="row">Usuarios permitidos prestarse libros:</p>
+      <table class="col-sm-11 table table-striped table-hover">
+          <thead>
+            <tr>
+              <th scope="col">CI</th>
+              <th scope="col">Id_User</th>
+              <th scope="col">Nombres y Apellidos</th>
+              <th scope="col">Telefono</th>
+              <th scope="col">Correo</th>
+              <th scope="col">Perfil</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of usersAllowed$|async | filteruser:filterusers">
+              <td>{{user.ci}}</td>
+              <td>{{user.id}}</td>
+              <td>{{user.nombres}} {{user.apellidos}}</td>
+              <td>{{user.num_telf}}</td>
+              <td>{{user.correo}}</td>
+              <td><button class="btn btn-primary" (click)="navigateViewUser(user.ci)">Ver Usuario</button></td>
+            </tr>
+          </tbody>
+        </table>
+  </div>
+  <div class="row BannedUserslistTable d-flex justify-content-center mb-5" *ngIf="check==='banned'">
+    <p class="row">Usuarios sancionados:</p>
+    <table class="col-sm-11 table table-striped table-hover">
+        <thead>
+          <tr>
+            <th scope="col">CI</th>
+            <th scope="col">Id_User</th>
+            <th scope="col">Nombres y Apellidos</th>
+            <th scope="col">Telefono</th>
+            <th scope="col">Correo</th>
+            <th scope="col">Perfil</th>
+            <th scope="col">Ver Sancion</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of usersBanned$ | async | filteruser:filterusers">
+            <th >{{user.ci}}</th>
+            <td>{{user.id}}</td>
+            <td>{{user.nombres}} {{user.apellidos}}</td>
+            <td>{{user.num_telf}}</td>
+            <td>{{user.correo}}</td>
+            <td><button class="btn btn-primary" (click)="navigateViewUser(user.ci)">Ver Usuario</button></td>
+            <td><button class="btn btn-danger" (click)="navigateViewSanction(user.ci)">Ver Sancion</button></td>
+          </tr>
+        
+        </tbody>
+      </table>
+</div>
+    
+</div>

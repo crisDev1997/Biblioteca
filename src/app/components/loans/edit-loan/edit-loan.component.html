@@ -1,0 +1,78 @@
+<app-header-nav></app-header-nav>
+
+<div class="EditLoanContainer container border border-dark mb-3" >
+    <div class="EditLoanHeader container d-flex flex-row  justify-content-between p-3 border-bottom border-dark">
+        <p class="fs-1 fw-bold">Informacion de Devolucion:</p>
+        <div class="col-sm-4 ">
+            <div class="row">
+                <p class="col-sm-6 fw-bold text-end">Id Devolucion:</p><p class="col-sm-2">{{id}}</p>
+            </div>
+        </div>
+    </div>
+    <div  *ngFor="let data of loanUser$|async"> 
+    <div class="row infoUserContent container d-flex p-3" >
+        <p class="p-1 fs-2 fw-bold">Informacion de Usuario: </p>
+        <div class="d-flex flex-nowrap bd-highlight">
+            <p class="pe-1 fw-bold">Id del Usuario:</p>
+            <p>{{data.id_usuario}}</p>
+        </div>
+        <div class="d-flex flex-nowrap bd-highlight">
+            <p class="pe-1 fw-bold">Carnet de Identidad:</p>
+            <p>{{data.ci}}</p>
+        </div>
+        <div class="d-flex flex-nowrap bd-highlight">
+        <p class="pe-1 fw-bold">Nombres y Apellidos: </p>
+        <p>{{data.nombres}} {{data.apellidos}}</p>
+        </div>
+        <div class="d-flex flex-nowrap bd-highlight">
+        <p class="pe-1 fw-bold">Telefono: </p>
+        <p>{{data.num_telf}}</p>
+        </div>     
+    </div>
+    <div class="row infoLoanContent container d-flex p-3">
+        <p class="p-1 fs-2 fw-bold">Informacion del Prestamo:</p>
+        <div class="d-flex flex-nowrap bd-highlight">
+            <p class="pe-1 fw-bold">Libro/Revista prestado:</p>
+            <p>{{data.titulo}}</p>
+        </div>
+        <div class="d-flex flex-nowrap bd-highlight">
+            <p class="pe-1 fw-bold">Fecha de Prestamo:</p>
+            <p>{{fecha_prestamo}}</p>
+        </div>
+        <div class="d-flex flex-nowrap bd-highlight">
+            <p class="pe-1 fw-bold">Fecha de entrega:</p>
+            <p>{{fecha_vencimiento_entrega}}</p>
+        </div>
+        <div class="d-flex flex-nowrap bd-highlight">
+            <p class="pe-1 fw-bold">Status de Devolucion:</p>
+            <p>{{data.status_devolucion==2? 'ENTREGADA': 'PENDIENTE'}}</p>
+        </div>
+    </div>
+
+    <div *ngIf="!amplied">
+    <p class="p-1 fs-5 fw-bold">Operaciones para esta devolucion:</p>
+    <div class="d-flex flex-row justify-content-evenly m-5">
+        <button class="btn btn-success" *ngIf="data.status_devolucion==1" (click)="changeStateLoan({id:id,state_devolucion:2})">Marcar como entregado</button>
+        <button class="btn btn-info" *ngIf="data.status_devolucion==2" (click)="changeStateLoan({id:id,state_devolucion:1})">Marcar como pendiente</button>
+        <button class="btn btn-secondary" *ngIf="data.status_devolucion==1"(click)="changeToExtendDate()" >Ampliar Prestamo</button>
+    </div>    
+    <div class="d-flex flex-row justify-content-evenly m-5">
+        <td><button class="btn btn-primary" data-bs-toggle="modal" data-bs-target='#UpdateLoan'>Actualizar Devolucion</button></td>
+        <div  class="modal fade" id="UpdateLoan" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <app-update-loan
+        [attr.id]="data.id"
+        [id]="data.id"
+        [ReloadData]="ReloadData.bind(this)"
+        ></app-update-loan>
+        </div>
+        <button class="btn btn-danger" *ngIf="data.status_devolucion==2" (click)="deleteLoan()">Eliminar Devolucion</button>
+    </div>
+    </div>
+    
+    <div *ngIf="amplied" >
+        
+        <app-add-extend-date [fecha_entrega]="data.fecha_vencimiento_entrega" [id_devolucion]="id" [changeShowOperation]="ShowOperations.bind(this)"> </app-add-extend-date>
+    </div>
+    </div>
+    
+</div>

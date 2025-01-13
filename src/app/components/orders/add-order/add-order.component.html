@@ -1,0 +1,42 @@
+<div class="AddOrderContainer modal-dialog modal-lg" id="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Agregar Nuevo Pedido:</h5>
+        <button type="button" id="btn-close" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form class="formAddJournal p-5" [formGroup]="form" #formDirective="ngForm" (ngSubmit)="onSubmit(form.value)">
+      <div class="modal-body">
+        <div class="row mb-3 align-baseline" style="display: none;">
+            <p class="col-sm-3 d-flex justify-content-end">id_admin:</p>
+            <input type="text" class="col-sm-4 d-flex justify-content-start" formControlName="id_admin" >
+          </div>
+
+          <div class="row mb-3 align-baseline" style="display: none;">
+            <p class="col-sm-3 d-flex justify-content-end">id_libro:</p>
+            <input type="text" class="col-sm-4 d-flex justify-content-start" formControlName="id_libro" >
+          </div>
+          <div class="row mb-3 align-baseline">
+            <p class="col-sm-3 d-flex justify-content-end">Seleccione un libro:</p>     
+          <select (change)="changeIdBook($event)" class="w-50 mb-4" >
+            <option value="null" selected>Seleccione el libro</option>
+            <option [value]="book.id" *ngFor="let book of books$ | async">{{book.titulo}}</option>
+           </select>
+            </div>
+          <div class="row mb-3 align-baseline">
+            <p class="col-sm-3 d-flex justify-content-end">Cantidad Pedida:</p>
+            <input type="text" class="col-sm-4 d-flex justify-content-start" formControlName="cantidad_pedida" >
+          </div>
+          <div class="row mb-3 align-baseline" style="display: none;">
+            <p class="col-sm-3 d-flex justify-content-end">Fecha Pedido:</p>
+            <input type="date" class="col-sm-4 d-flex justify-content-start" formControlName="fecha_pedido" >
+          </div>
+          
+         
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="btnClose" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Agregar Pedido</button>
+      </div>
+    </form>
+    </div>
+  </div>

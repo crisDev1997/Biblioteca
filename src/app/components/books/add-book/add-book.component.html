@@ -1,0 +1,77 @@
+<app-header-nav></app-header-nav>
+<div class="AddBookContainer container p-4 border border-dark rounded mb-4">
+    <div class="AddBookHeader d-flex justify-content-center border-bottom">
+        <p class="display-6">Agregar nuevo libro:</p>
+    </div>
+    <form class="formAddBook p-5" [formGroup]="form" #formDirective="ngForm" (ngSubmit)="onSubmit(form.value)">
+        <div class="row mb-3 align-baseline" >
+            <p class="col-sm-3 d-flex justify-content-end">Titulo del libro:</p>
+            <input type="text" class="col-sm-4 d-flex justify-content-start" formControlName="titulo">
+        </div>
+        <div class="row mb-3 align-baseline">
+            <p class="col-sm-3 d-flex justify-content-end">Autor:</p>
+            <input type="text" class="col-sm-4 d-flex justify-content-start" formControlName="autor">
+        </div>
+        <div class="row mb-3 align-baseline">
+            <p class="col-sm-3 d-flex justify-content-end">Genero:</p>
+            <input type="text" class="col-sm-4 d-flex justify-content-start" formControlName="genero">
+        </div>
+        <div class="row mb-3 align-baseline" *ngIf="!checkOrd">
+            <p class="col-sm-6 d-flex justify-content-end">Presione si el libro pertenecera a alguna seccion:</p>
+            <button (click)="checkOrd=true" class="btn btn-primary">Ordenar libro</button>
+        </div>
+        <div class="row mb-3 align-baseline" *ngIf="checkOrd">
+            <p class="col-sm-6 d-flex justify-content-end">Presione para no ordenar el libro:</p>
+            <button (click)="changeNull()" class="btn btn-danger">No ordenar</button>
+        </div>
+        <div class="row mb-3 align-baseline" *ngIf="checkOrd">
+            <p class="col-sm-3 d-flex justify-content-end">Seleccionar la seccion:</p>
+            <select (change)="changeIdSection($event)" >
+                <option [value]="null">Seleccione una seccion</option>
+                <option [value]="section.id_seccion" *ngFor="let section of sections$ | async">{{section.nombre_seccion}}</option>
+        </select>
+        </div>
+        <div class="row mb-3 align-baseline" style="display: none;">
+            <p class="col-sm-3 d-flex justify-content-end">Seccion:</p>
+            <input type="text" class="col-sm-4 d-flex justify-content-start" formControlName="id_seccion">
+        </div>
+        <div class="row mb-3 align-baseline">
+            <p class="col-sm-3 d-flex justify-content-end">Cantidad del libro:</p>
+            <input type="text" class="col-sm-4 d-flex justify-content-start" formControlName="cantidad" placeholder="Ej: 2">
+        </div>
+        <div class="row mb-3 align-baseline">
+            <p class="col-sm-6 d-flex justify-content-end">Link de referencia para descarga/compra:</p>
+            <textarea name="" id="" cols="20" rows="4" formControlName="link_pdf_ref" placeholder="Ej: www.google.com"></textarea>
+        </div>
+        <div class="btnAddUser row d-flex justify-content-evenly">
+            <button class="btn btn-primary mt-5 p-3 col-sm-4" type="submit" [disabled]="form.invalid">Registrar Libro</button>
+        </div>
+    </form>
+<!--
+    
+    
+    <form class="formAddUser p-5" [formGroup]="form" #formDirective="ngForm" (ngSubmit)="onSubmit(form.value)">
+        <div class="row mb-3 align-baseline" style="display: none;">
+            <p class="col-sm-3 d-flex justify-content-end">Id Devolucion:</p>
+            <input type="text" class="col-sm-4 d-flex justify-content-start" formControlName="id_devolucion" style="display: none;">
+        </div>
+        <div class="row mb-3 align-baseline" style="display: none;">
+            <p class="col-sm-3 d-flex justify-content-end">Fecha de Entrega Actual:</p>
+            <input type="date" class="col-sm-4 d-flex justify-content-start" formControlName="fecha_entrega_anterior" style="display: none;">
+        </div>
+        <div class="row mb-3 align-baseline" style="display: none;">
+            <p class="col-sm-3 d-flex justify-content-end">Fecha Actual:</p>
+            <input type="date" class="col-sm-4 d-flex justify-content-start" formControlName="fecha_ampliacion" >
+        </div>
+        <div class="row mb-3 align-baseline">
+            <p class="col-sm-5 d-flex justify-content-end">Fecha Nueva para la Entrega:</p>
+            <input type="date" class="col-sm-6 d-flex justify-content-start" formControlName="fecha_limite_ampliacion" >
+        </div>
+        <div class="btnAddUser row d-flex justify-content-evenly">
+            <button class="btn btn-primary mt-5 p-3 col-sm-4" type="submit" [disabled]="form.invalid">Ampliar Prestamo</button>
+            <button class="btn btn-secondary mt-5 p-3 col-sm-4" type="button" (click)="cancelExtendDate()" >Cancelar Ampliacion</button>
+        </div>
+    </form>
+
+-->
+</div>

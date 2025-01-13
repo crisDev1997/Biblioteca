@@ -1,0 +1,74 @@
+<app-header-nav></app-header-nav>
+<div class="UpdateBanContainer container border border-dark mb-3" *ngFor="let data of userBanned$|async">
+    <div class="UpdateBanHeader container d-flex flex-row  justify-content-between p-3 border-bottom border-dark">
+        <p class="fs-1 fw-bold">Modificar la sancion:</p>
+        <div class="col-sm-4 ">
+            <div class="row">
+                <p class="col-sm-5 fw-bold text-end">Id Sancion:</p><p class="col-sm-2">{{data.id}}</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row infoUserBanContent container d-flex p-3">
+        <p class="p-1 fs-2 fw-bold">Informacion del Usuario: </p>
+        <div class="d-flex flex-nowrap bd-highlight">
+        <p class="p-1 fw-bold">Id del Usuario:</p>
+        <p class="p-1">{{data.id_usuario}}</p>
+        </div>
+        <div class="d-flex flex-nowrap bd-highlight">
+        <p class="p-1 fw-bold">Nombres y Apellidos: </p>
+        <p class="p-1 ">{{data.nombres}} {{data.apellidos}}</p>
+        </div>
+        <div class="d-flex flex-nowrap bd-highlight">
+        <p class="p-1 fw-bold">Telefono: </p>
+        <p class="p-1 ">{{data.num_telf}}</p>
+        </div>
+        <div class="d-flex flex-nowrap bd-highlight">
+        <p class="p-1 fw-bold">Correo: </p>
+        <p class="p-1 ">{{data.correo}}</p>
+        </div>
+     
+    </div>
+    <form class="row dataUpdateBanContent container d-flex p-3" [formGroup]="form"  #formDirective="ngForm" (ngSubmit)="onSubmit(form.value)">
+        <p class="p-1 fs-2 fw-bold">Datos de sancion:</p>
+        <div class="d-flex flex-nowrap bd-highlight mb-2">
+            <p class="p-1 fw-bold">Id Usuario:</p>
+            <input type="text" class="p-1 w-25" formControlName="id_usuario">
+        </div>
+        <div class="d-flex flex-nowrap bd-highlight mb-3" *ngIf="!notReturned">
+            <p class="Paragraph pe-4 fw-bold">Presione si el usuario no retorno el libro: </p>
+            <button type="button" class="ButtonDev btn btn-danger" (click)="ChangeReturn()">Marcar como no Retorno</button>
+        </div>
+        <div class="d-flex flex-nowrap bd-highlight mb-3" *ngIf="notReturned">
+            <p class="Paragraph pe-4 fw-bold">Presione si la sancion no tiene que ver con el retorno de un libro o si retorno el libro: </p>
+            <button type="button" class="ButtonDev btn btn-info" (click)="ChangeReturn()">Quitar marca</button>
+        </div>
+        <input type="text" class="p-1 w-25" formControlName="id_devolucion" style="display: none;">
+        
+        <div class="d-flex flex-column bd-highlight mb-3">
+            <p class="p-1 fw-bold">Razon de la Sancion:</p>
+            <textarea formControlName="razon_sancion" id="razon_sancion" cols="20" rows="5"></textarea>
+        </div>
+        <div class="d-flex flex-nowrap bd-highlight">
+            <p class="p-1 fw-bold">Fecha que se dio la Sancion:</p>
+            <input type="date" class="p-1 " formControlName="fecha_sancion">
+        </div>
+        <div class="d-flex flex-nowrap bd-highlight mb-3">
+            <p class="p-1 fw-bold">Fecha fin de la Sancion:</p>
+            <input type="date" class="p-1 " formControlName="fecha_fin_sancion" value="null">
+            <p class="p-1 text-danger" name="fecha_indefinida">{{data.fecha_fin_sancion===null? 'INDEFINIDA' : ''}}</p>
+        </div>
+        <div class="d-flex justify-content-center">
+        <button type="submit" class="btn btn-primary w-25">Actualizar Sancion</button>
+        </div>
+    </form>
+        
+    <div class="d-flex flex-row justify-content-evenly m-5">
+        
+        <button type="button" class="btn btn-secondary" (click)="resetForm()">Reestablecer Cambios</button>
+        <button type="button" class="btn btn-danger" (click)="deleteBan(data.id)">Eliminar Sancion</button>
+        <button type="button" class="btn btn-info" (click)="navigateViewBan(data.ci)">Cancelar Modificacion</button>
+    </div>
+    
+</div>
+

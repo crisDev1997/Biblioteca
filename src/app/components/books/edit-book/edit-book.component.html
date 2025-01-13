@@ -1,0 +1,55 @@
+<app-header-nav></app-header-nav>
+<div class="EditBookContainer container border border-dark mb-3" >
+    <div class="EditBookHeader container d-flex flex-row  justify-content-between p-3 border-bottom border-dark">
+        <p class="fs-1 fw-bold">Informacion de Libro:</p>
+        <div class="col-sm-4 ">
+            <div class="row">
+                <p class="col-sm-6 fw-bold text-end">Id Libro:</p><p class="col-sm-2">{{id}}</p>
+            </div>
+        </div>
+    </div>
+    <div  *ngFor="let data of Book$|async"> 
+    <div class="row infoBookContent container d-flex p-3">
+        <p class="p-1 fs-2 fw-bold">Informacion del Libro:</p>
+        <div class="d-flex flex-nowrap bd-highlight">
+            <p class="pe-1 fw-bold">Titulo:</p>
+            <p>{{data.titulo}}</p>
+        </div>
+        <div class="d-flex flex-nowrap bd-highlight">
+            <p class="pe-1 fw-bold">Autor:</p>
+            <p>{{data.autor}}</p>
+        </div>
+        <div class="d-flex flex-nowrap bd-highlight">
+            <p class="pe-1 fw-bold">genero:</p>
+            <p>{{data.genero}}</p>
+        </div>
+        <div class="d-flex flex-nowrap bd-highlight">
+            <p class="pe-1 fw-bold">Id Seccion:</p>
+            <p>{{data.id_seccion}}</p>
+
+        </div>
+        <div class="d-flex flex-nowrap bd-highlight">
+            <p class="pe-1 fw-bold">Cantidad Original:</p>
+            <p>{{data.cantidad}}</p>
+        </div>
+        <div class="d-flex flex-nowrap bd-highlight">
+            <p class="pe-1 fw-bold">Cantidad disponible para prestar:</p>
+            <p>{{data.disponibles}}</p>
+        </div>
+        <div class="d-flex flex-nowrap bd-highlight">
+            <p class="pe-1 fw-bold">Link de referencia o pdf del libro:</p>
+            <textarea class="p-1 w-50" id="" cols="20" rows="2" disabled>{{data.link_pdf_ref}}</textarea>
+        </div>
+    </div>
+
+    <div>
+    <p class="p-1 fs-5 fw-bold">Operaciones para el libro:</p>  
+    <div class="d-flex flex-row justify-content-evenly m-5">
+        <button class="btn btn-info" (click)="NavigateTo(id)">Actualizar Libro</button>
+        <button class="btn btn-danger" (click)="DeleteBook(id)">Eliminar Libro</button>
+    </div>
+    </div>
+    
+    </div>
+    
+</div>

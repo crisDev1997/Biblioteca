@@ -1,0 +1,146 @@
+<app-header-nav></app-header-nav>
+<div class="JournalslistContainer container border border-dark mb-4">
+    <div class="JournalslistHeader container p-0">
+        <div class="row border-bottom border-dark  mb-3">
+            <p class="fs-1">Lista de Revistas</p>
+        </div>
+    </div>
+    <div class="BookslistSearch d-flex flex-row justify-content-start align-baseline border-bottom border-dark pb-3">
+      <p class="display-10 me-2">Buscar Revista:</p>
+      <input  type="text" class="forms-control" placeholder="Buscar.." [(ngModel)]="filterbooks" name="filterbooks">
+      <button class="btn btn-primary">Buscar</button>
+  </div>
+    <div class="BookslistFilter d-flex flex-row justify-content-start mt-3 pb-2 border-bottom border-dark">
+        <p class="display-10 me-2">Filtrar para las revistas:</p>
+        <div class="form-check me-2">
+            <input class="form-check-input" type="radio" name="radio-button-banned-users" id="all" (click)="Filter('all')" checked>
+            <label class="form-check-label" for="all">
+            Todas las Revistas
+            </label>
+        </div>
+        <div class="form-check me-2">
+            <input class="form-check-input" type="radio" name="radio-button-banned-users" id="not-avaible" (click)="Filter('avaible')" >
+            <label class="form-check-label" for="avaible">
+            Revistas disponibles
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="radio-button-banned-users" id="not-avaible" (click)="Filter('not-avaible')" >
+            <label class="form-check-label" for="not-avaible">
+            Revistas no disponibles
+            </label>
+        </div>
+    </div>
+    <div class="JournalListNew d-flex flex-row justify-content-between mt-3 pb-2 border-bottom border-dark">
+        <button class="btn btn-success"  data-bs-toggle="modal" data-bs-target="#exampleModal">Agregar revista</button>
+       
+    </div>
+    <div  class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <app-add-journal [ReloadList]="ReloadList.bind(this)"></app-add-journal>
+    </div>
+    
+
+    <div class="row JournalListTable d-flex justify-content-center mb-5 fs-9" *ngIf="check==='all'">
+        <p class="row">Todos las Revistas en Biblioteca:</p>
+        <table class="col-sm-11 table table-striped table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Marca de Revista</th>
+                <th scope="col">Titular</th>
+                <th scope="col">Num Volumen</th>
+                <th scope="col">Num Revista</th>
+                <th scope="col">Fecha Publicacion</th>
+                <th scope="col">Cantidad en Biblioteca</th>
+                <th scope="col">Cantidad Disponible</th>
+                <th scope="col">Link/Ref del Libro</th>
+                <th scope="col">Ver Revista</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let journal of journalsAll$ | async | filterbook:filterbooks">
+                <td>{{journal.id}}</td>
+                <td>{{journal.titulo}} </td>
+                <td>{{journal.titular}}</td>
+                <td>{{journal.num_volumen}}</td>
+                <td>{{journal.num_revista}}</td>
+                <td ng-non-bindable>{{journal.fecha_publicacion | date:'dd-MM-yyyy'}}</td>
+                <td>{{journal.cantidad}}</td>
+                <td>{{journal.cantidad_disponible}}</td>
+                <td><button class="btn btn-primary" (click)="navigateViewPdf(journal.link_pdf_ref)">Ver Pdf/Ref</button></td>
+                <td><button class="btn btn-primary" (click)="navigateViewJournal(journal.id)">Ver Revista</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="row JournalListTable d-flex justify-content-center mb-5 fs-9" *ngIf="check==='avaible'">
+            <p class="row">Revistas Disponibles para prestar:</p>
+            <table class="col-sm-11 table table-striped table-hover">
+                <thead>
+                  <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Marca de Revista</th>
+                    <th scope="col">Titular</th>
+                    <th scope="col">Num Volumen</th>
+                    <th scope="col">Num Revista</th>
+                    <th scope="col">Fecha Publicacion</th>
+                    <th scope="col">Cantidad en Biblioteca</th>
+                    <th scope="col">Cantidad Disponible</th>
+                    <th scope="col">Link/Ref del Libro</th>
+                    <th scope="col">Ver Revista</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let journal of journalsAvaible$ | async | filterbook:filterbooks">
+                    <td>{{journal.id}}</td>
+                    <td>{{journal.titulo}} </td>
+                    <td>{{journal.titular}}</td>
+                    <td>{{journal.num_volumen}}</td>
+                    <td>{{journal.num_revista}}</td>
+                    <td ng-non-bindable>{{journal.fecha_publicacion | date:'dd-MM-yyyy'}}</td>
+                    <td>{{journal.cantidad}}</td>
+                    <td>{{journal.cantidad_disponible}}</td>
+                    <td><button class="btn btn-primary" (click)="navigateViewPdf(journal.link_pdf_ref)">Ver Pdf/Ref</button></td>
+                    <td><button class="btn btn-primary" (click)="navigateViewJournal(journal.id)">Ver Revista</button></td>
+                     
+                  </tr>
+                </tbody>
+              </table>
+        </div>
+        <div class="row JournalListTable d-flex justify-content-center mb-5 fs-9" *ngIf="check==='not-avaible'">
+            <p class="row">Revistas no disponibles:</p>
+            <table class="col-sm-11 table table-striped table-hover">
+                <thead>
+                  <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Marca de Revista</th>
+                    <th scope="col">Titular</th>
+                    <th scope="col">Num Volumen</th>
+                    <th scope="col">Num Revista</th>
+                    <th scope="col">Fecha Publicacion</th>
+                    <th scope="col">Cantidad en Biblioteca</th>
+                    <th scope="col">Cantidad Disponible</th>
+                    <th scope="col">Link/Ref del Libro</th>
+                    <th scope="col">Ver Revista</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let journal of journalsNotAvaible$ | async | filterbook:filterbooks">
+                    <td>{{journal.id}}</td>
+                    <td>{{journal.titulo}} </td>
+                    <td>{{journal.titular}}</td>
+                    <td>{{journal.num_volumen}}</td>
+                    <td>{{journal.num_revista}}</td>
+                    <td ng-non-bindable>{{journal.fecha_publicacion | date:'dd-MM-yyyy'}}</td>
+                    <td>{{journal.cantidad}}</td>
+                    <td>{{journal.cantidad_disponible}}</td>
+                    <td><button class="btn btn-primary" (click)="navigateViewPdf(journal.link_pdf_ref)">Ver Pdf/Ref</button></td>
+                    <td><button class="btn btn-primary" (click)="navigateViewJournal(journal.id)">Ver Revista</button></td>
+                     
+                  </tr>
+                </tbody>
+              </table>
+            </div>    
+</div>
+
+

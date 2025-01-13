@@ -1,0 +1,45 @@
+<div class="AddJournalContainer modal-dialog modal-lg" id="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Agregar Nueva Revista:</h5>
+        <button type="button" id="btn-close" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form class="formAddJournal p-5" [formGroup]="form" #formDirective="ngForm" (ngSubmit)="onSubmit(form.value)">
+      <div class="modal-body">
+       
+          <div class="row mb-3 align-baseline">
+            <p class="col-sm-3 d-flex justify-content-end">Marca de Revista:</p>
+            <input type="text" class="col-sm-4 d-flex justify-content-start w-50" formControlName="titulo" >
+          </div>
+          <div class="row mb-3 align-baseline">
+            <p class="col-sm-3 d-flex justify-content-end">Titular de Portada:</p>
+            <input type="text" class="col-sm-4 d-flex justify-content-start w-50" formControlName="titular" >
+          </div>
+          <div class="row mb-3 align-baseline">
+            <p class="col-sm-3 d-flex justify-content-end">Numero de Volumen:</p>
+            <input type="text" class="col-sm-4 d-flex justify-content-start w-50" formControlName="num_volumen" >
+          </div>
+          <div class="row mb-3 align-baseline">
+            <p class="col-sm-3 d-flex justify-content-end">Numero de Revista:</p>
+            <input type="text" class="col-sm-4 d-flex justify-content-start w-50"  formControlName="num_revista">
+          </div>
+          <div class="row mb-3 align-baseline">
+            <p class="col-sm-3 d-flex justify-content-end">Cantidad de Revista:</p>
+            <input type="text" class="col-sm-4 d-flex justify-content-start w-50" formControlName="cantidad" >
+          </div>
+          <div class="row mb-3 align-baseline">
+            <p class="col-sm-3 d-flex justify-content-end">Fecha de Publicacion:</p>
+            <input type="date" class="col-sm-4 d-flex justify-content-start w-50"  formControlName="fecha_publicacion" >
+          </div>
+          <div class="row mb-3 align-baseline">
+            <p class="col-sm-3 d-flex justify-content-end">Link de la Revista:</p>
+            <input type="text" class="col-sm-4 d-flex justify-content-start w-50" formControlName="link_pdf_ref" >
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="btnClose" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Agregar Revista</button>
+      </div>
+    </form>
+    </div>
+  </div>
