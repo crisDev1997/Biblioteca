@@ -2,9 +2,10 @@ const express=require('express');
 const router=express.Router()
 const AuthController=require('../../controllers/auth.controller')
 
-//Login de administrador:
-router.get('/login',AuthController.getLogin);
-router.post('/auth',AuthController.postAuth);
-router.post('/login',AuthController.postLogin);
+router.post('/auth/login',AuthController.postAuth);
 
+router.post('/auth/user/login',AuthController.userPostLogin);
+router.post('/auth/user/new-user-account',AuthController.createUserAccount);
+router.get('/auth/user/data/:correo',AuthController.getUserDataByEmail)
+router.get('/auth/user/verify-email-not-registered/:correo',AuthController.verifyNotDuplicatedEmailRegister);
 module.exports=router

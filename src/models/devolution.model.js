@@ -2,7 +2,8 @@ const dbConn=require('../config/db_config');
 
 const Devolution=(devolution)=>{
     this.id=devolution.id,
-    this.user_id=devolution.id,
+    this.id_usuario=devolution.id_usuario,
+    this.id_libro=devolution.id_libro,
     this.ci=devolution.ci,
     this.nombres=devolution.nombres,
     this.apellidos=devolution.apellidos,
@@ -21,27 +22,39 @@ const DevolutionModel=function(devolution){
     this.fecha_vencimiento_entrega=devolution.fecha_vencimiento_entrega,
     this.status_devolucion=devolution.status_devolucion
 }
+
+Devolution.getAllDevolutionsFromUser=(id,result)=>{
+    dbConn.query(`SELECT de.id,u.id AS id_usuario,lib.id AS id_libro ,p.ci,p.nombres,p.apellidos, p.num_telf,lib.titulo,de.fecha_prestamo_persona,de.fecha_vencimiento_entrega, de.status_devolucion FROM persona AS p INNER JOIN usuario AS u ON p.ci = u.ci_persona INNER JOIN devoluciones AS de ON u.id = de.id_usuario INNER JOIN libros AS lib ON de.id_libro=lib.id WHERE u.id=${id}`,
+    (err,res)=>{
+        if(err){
+            console.log('Error while fetching books ',err);
+            result(null,err);
+        }else{
+            result(null,res);
+        }
+    })
+}
+
 DevolutionModel.createNewDevolution=(devolutionData,result)=>{
-    dbConn.query(`INSERT INTO devoluciones SET ?`,devolutionData,
+    dbConn.query(`INSERT INTO devoluciones(id_usuario,id_libro,fecha_prestamo_persona,fecha_vencimiento_entrega,status_devolucion) VALUES(${devolutionData.id_usuario},${devolutionData.id_libro},date(NOW()),'${devolutionData.fecha_vencimiento_entrega}',1)`,
     (err,res)=>{
         if(err){
             console.log('Error while fetching devolutions ',err);
             result(null,err);
         }else{
-            
+            console.log("Prestamo registrado!");
             result(null,res);
         }
     })
 }
 //get data from a devolution
 Devolution.getDevolution=(id,result)=>{
-    dbConn.query(`SELECT de.id,u.id ,p.ci,p.nombres,p.apellidos, p.num_telf,lib.titulo,de.fecha_prestamo_persona,de.fecha_vencimiento_entrega, de.status_devolucion FROM persona AS p INNER JOIN usuario AS u ON p.ci = u.ci_persona INNER JOIN devoluciones AS de ON u.id = de.id_usuario INNER JOIN libros AS lib ON de.id_libro=lib.id WHERE de.id=${id}`,
+    dbConn.query(`SELECT de.id,u.id AS id_usuario,lib.id AS id_libro ,p.ci,p.nombres,p.apellidos, p.num_telf,lib.titulo,de.fecha_prestamo_persona,de.fecha_vencimiento_entrega, de.status_devolucion FROM persona AS p INNER JOIN usuario AS u ON p.ci = u.ci_persona INNER JOIN devoluciones AS de ON u.id = de.id_usuario INNER JOIN libros AS lib ON de.id_libro=lib.id WHERE de.id=${id}`,
     (err,res)=>{
         if(err){
             console.log('Error while fetching books ',err);
             result(null,err);
         }else{
-            
             result(null,res);
         }
     })
@@ -49,7 +62,33 @@ Devolution.getDevolution=(id,result)=>{
 }
 //get all devolutions
 Devolution.getAllDevolutions=(result)=>{
-    dbConn.query("SELECT de.id,u.id ,p.ci,p.nombres,p.apellidos, p.num_telf,lib.titulo,de.fecha_prestamo_persona,de.fecha_vencimiento_entrega, de.status_devolucion FROM persona AS p INNER JOIN usuario AS u ON p.ci = u.ci_persona INNER JOIN devoluciones AS de ON u.id = de.id_usuario INNER JOIN libros AS lib ON de.id_libro=lib.id ORDER BY de.id ",
+    dbConn.query("SELECT de.id,u.id AS id_usuario,lib.id AS id_libro,p.ci,p.nombres,p.apellidos, p.num_telf,lib.titulo,de.fecha_prestamo_persona,de.fecha_vencimiento_entrega, de.status_devolucion FROM persona AS p INNER JOIN usuario AS u ON p.ci = u.ci_persona INNER JOIN devoluciones AS de ON u.id = de.id_usuario INNER JOIN libros AS lib ON de.id_libro=lib.id ORDER BY de.fecha_vencimiento_entrega  ",
+    (err,res)=>{
+        if(err){
+            console.log('Error while fetching books ',err);
+            result(null,err);
+        }else{
+            
+            result(null,res);
+        }
+    })
+}
+
+Devolution.getAllDevolutionsReturned=(result)=>{
+    dbConn.query("SELECT de.id,u.id AS id_usuario,lib.id AS id_libro,p.ci,p.nombres,p.apellidos, p.num_telf,lib.titulo,de.fecha_prestamo_persona,de.fecha_vencimiento_entrega, de.status_devolucion FROM persona AS p INNER JOIN usuario AS u ON p.ci = u.ci_persona INNER JOIN devoluciones AS de ON u.id = de.id_usuario INNER JOIN libros AS lib ON de.id_libro=lib.id WHERE de.status_devolucion=2 ORDER BY de.fecha_vencimiento_entrega  ",
+    (err,res)=>{
+        if(err){
+            console.log('Error while fetching books ',err);
+            result(null,err);
+        }else{
+            
+            result(null,res);
+        }
+    })
+}
+
+Devolution.getAllDevolutionsExpired=(result)=>{
+    dbConn.query("SELECT de.id,u.id AS id_usuario,lib.id AS id_libro,p.ci,p.nombres,p.apellidos, p.num_telf,lib.titulo,de.fecha_prestamo_persona,de.fecha_vencimiento_entrega, de.status_devolucion FROM persona AS p INNER JOIN usuario AS u ON p.ci = u.ci_persona INNER JOIN devoluciones AS de ON u.id = de.id_usuario INNER JOIN libros AS lib ON de.id_libro=lib.id WHERE de.fecha_vencimiento_entrega<date(NOW()) and de.status_devolucion=1 ORDER BY de.fecha_vencimiento_entrega  ",
     (err,res)=>{
         if(err){
             console.log('Error while fetching books ',err);
@@ -62,18 +101,21 @@ Devolution.getAllDevolutions=(result)=>{
 }
 
 
+
 const DevolutionPending=(devolution)=>{
-    this.id_devolucion=devolution.id_devolucion,
+    this.id=devolution.id,
     this.id_usuario=devolution.id_usuario,
-    this.nomb_completo=devolution.nomb_completo,
-    this.telefono=devolution.telefono,
-    this.lib_prestado=devolution.lib_prestado,
-    this.fecha_prestado=devolution.fecha_prestado,
-    this.fecha_retorno=devolution.fecha_retorno,
+    this.ci=devolution.ci,
+    this.nombres=devolution.nombres,
+    this.apellidos=devolution.apellidos,
+    this.num_telf=devolution.num_telf,
+    this.titulo=devolution.titulo,
+    this.fecha_prestamo_persona=devolution.fecha_prestamo_persona,
+    this.fecha_vencimiento_entrega=devolution.fecha_vencimiento_entrega,
     this.status_devolucion=devolution.status_devolucion
 }
 DevolutionPending.getAllPendingDevolutions=(result)=>{
-    dbConn.query("SELECT de.id AS id_devolucion,u.id AS id_usuario,p.ci,concat_ws(' ',p.nombres , p.apellidos ) AS nomb_completo , p.num_telf AS telefono,lib.titulo as lib_prestado ,de.fecha_prestamo_persona AS fecha_prestado,de.fecha_vencimiento_entrega AS fecha_Retorno, de.status_devolucion  FROM persona AS p INNER JOIN usuario AS u ON p.ci = u.ci_persona INNER JOIN devoluciones AS de ON u.id = de.id_usuario INNER JOIN libros AS lib ON de.id_libro=lib.id WHERE de.status_devolucion!=2 and de.fecha_vencimiento_entrega>date(NOW()) ORDER BY de.fecha_vencimiento_entrega",
+    dbConn.query("SELECT de.id,u.id AS id_usuario,p.ci,p.nombres,p.apellidos, p.num_telf,lib.titulo,de.fecha_prestamo_persona,de.fecha_vencimiento_entrega, de.status_devolucion  FROM persona AS p INNER JOIN usuario AS u ON p.ci = u.ci_persona INNER JOIN devoluciones AS de ON u.id = de.id_usuario INNER JOIN libros AS lib ON de.id_libro=lib.id WHERE de.status_devolucion=1 and de.fecha_vencimiento_entrega>date(NOW()) ORDER BY de.fecha_vencimiento_entrega ",
     (err,res)=>{
         if(err){
             console.log('Error while fetching books ',err);
@@ -85,7 +127,7 @@ DevolutionPending.getAllPendingDevolutions=(result)=>{
     })
 }
 DevolutionPending.getAllDevolutionsNotReturned=(result)=>{
-    dbConn.query("SELECT de.id AS id_devolucion,u.id AS id_usuario,p.ci,concat_ws(' ',p.nombres , p.apellidos ) AS nomb_completo , p.num_telf AS telefono,lib.titulo as lib_prestado ,de.fecha_prestamo_persona AS fecha_prestado,de.fecha_vencimiento_entrega AS fecha_Retorno, de.status_devolucion  FROM persona AS p INNER JOIN usuario AS u ON p.ci = u.ci_persona INNER JOIN devoluciones AS de ON u.id = de.id_usuario INNER JOIN libros AS lib ON de.id_libro=lib.id WHERE de.status_devolucion!=2 and de.fecha_vencimiento_entrega<date(NOW()) ORDER BY de.fecha_vencimiento_entrega",
+    dbConn.query("SELECT de.id,u.id AS id_usuario,p.ci,p.nombres,p.apellidos, p.num_telf,lib.titulo,de.fecha_prestamo_persona,de.fecha_vencimiento_entrega, de.status_devolucion  FROM persona AS p INNER JOIN usuario AS u ON p.ci = u.ci_persona INNER JOIN devoluciones AS de ON u.id = de.id_usuario INNER JOIN libros AS lib ON de.id_libro=lib.id WHERE de.status_devolucion!=2 and de.fecha_vencimiento_entrega<date(NOW()) ORDER BY de.fecha_vencimiento_entrega ",
     (err,res)=>{
         if(err){
             console.log('Error while fetching books ',err);
@@ -98,18 +140,23 @@ DevolutionPending.getAllDevolutionsNotReturned=(result)=>{
 }
 
 const DevolutionAmplied=(devolution)=>{
-    this.id_devolucion=devolution.id_devolucion,
+    this.id=devolution.id,
+    this.id_ampliacion=devolution.id_ampliacion;
+    this.id_usuario=devolution.id_usuario,
     this.ci=devolution.ci,
-    this.nomb_completo=devolution.nomb_completo,
-    this.telefono=devolution.telefono,
-    this.lib_prestado=devolution.lib_prestado,
-    this.fecha_prestado=devolution.fecha_prestado,
+    this.nombres=devolution.nombres,
+    this.apellidos=devolution.apellidos,
+    this.num_telf=devolution.num_telf,
+    this.titulo=devolution.titulo,
+    this.fecha_prestamo_persona=devolution.fecha_prestamo_persona,
     this.fecha_entrega_anterior=devolution.fecha_entrega_anterior,
-    this.fecha_nueva_entrega=devolution.fecha_nueva_entrega
-
+    this.fecha_ampliacion=devolution.fecha_ampliacion,
+    this.fecha_vencimiento_entrega=devolution.fecha_vencimiento_entrega,
+    this.status_devolucion=devolution.status_devolucion
+    
 }
 DevolutionAmplied.getAllAmpliedDevolutions=(result)=>{
-    dbConn.query("SELECT de.id AS id_devolucion,p.ci, concat_ws(' ',p.nombres , p.apellidos ) AS nomb_completo, p.num_telf AS telefono,lib.titulo AS lib_prestado ,de.fecha_prestamo_persona AS fecha_prestado,amp.fecha_entrega_anterior ,amp.fecha_ampliacion  ,de.fecha_vencimiento_entrega AS fecha_nueva_entrega FROM persona AS p INNER JOIN usuario AS u ON p.ci = u.ci_persona INNER JOIN devoluciones AS de ON u.id = de.id_usuario INNER JOIN libros AS lib ON de.id_libro=lib.id INNER JOIN ampliacion AS amp ON de.id = amp.id_devolucion ORDER BY de.fecha_vencimiento_entrega ",
+    dbConn.query("SELECT de.id,amp.id AS id_ampliacion,u.id AS id_usuario ,p.ci, p.nombres,p.apellidos ,p.num_telf,lib.titulo,de.fecha_prestamo_persona ,amp.fecha_entrega_anterior ,amp.fecha_ampliacion  ,de.fecha_vencimiento_entrega,de.status_devolucion FROM persona AS p INNER JOIN usuario AS u ON p.ci = u.ci_persona INNER JOIN devoluciones AS de ON u.id = de.id_usuario INNER JOIN libros AS lib ON de.id_libro=lib.id INNER JOIN ampliacion AS amp ON de.id = amp.id_devolucion ORDER BY de.fecha_vencimiento_entrega ",
     (err,res)=>{
         if(err){
             console.log('Error while fetching books ',err);
@@ -119,6 +166,19 @@ DevolutionAmplied.getAllAmpliedDevolutions=(result)=>{
             result(null,res);
         }
     })
+}
+
+DevolutionModel.updateStateDevolution=(id,state_devolution,result)=>{
+    dbConn.query("UPDATE devoluciones SET status_devolucion=? WHERE id=?",[state_devolution,id],(err,res)=>{
+        if(err){
+            console.log('Error mientras se actualizaba la devolucion');
+            result(null,err)
+        }else{
+            console.log("Estado de Devolucion actualizada!");
+            result(null,res);
+        }
+    })
+
 }
 
 DevolutionModel.updateDevolution=(id,devolutionData,result)=>{

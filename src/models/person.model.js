@@ -18,7 +18,6 @@ Person.getAllPersons=(result)=>{
             console.log('Error while fetching persons ',err);
             result(null,err);
         }else{
-            console.log('Los libros se han pedido correctamente! ')
             result(null,res);
         }
     })

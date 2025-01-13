@@ -10,17 +10,13 @@ exports.getAllDevolutionsList=(req,res)=>{
     })
 }
 exports.getDevolution=(req,res)=>{
-    Devolution.getDevolution(req.params.id,(err,devolution)=>{
+    Devolution.getDevolution(req.params.id,(err,devolutions)=>{
         if(err){
             res.send(err)
             res.json({status:false, message:"No se encontro la devolucion"});
         }else{
             
-            res.json({
-                status:true,
-                message:'Devolucion actualizada!',
-                data:devolution
-            })
+            res.send(devolutions)
             
            
         }
@@ -30,6 +26,15 @@ exports.getDevolution=(req,res)=>{
 exports.getAllPendingDevolutionsList=(req,res)=>{
     DevolutionPending.getAllPendingDevolutions((err,devolutions)=>{
        
+        if(err){
+            res.send(err)
+        }else{
+            res.send(devolutions)
+        }
+    })
+}
+exports.getAllDevolutionsExpiredList=(req,res)=>{
+    Devolution.getAllDevolutionsExpired((err,devolutions)=>{
         if(err){
             res.send(err)
         }else{
@@ -48,8 +53,39 @@ exports.getAllExtendedDevolutionsList=(req,res)=>{
     })
 }
 
+exports.getAllDevolutionsListReturnedList=(req,res)=>{
+    Devolution.getAllDevolutionsReturned((err,devolutions)=>{
+        if(err){
+            res.send(err)
+        }else{
+            res.send(devolutions)
+        }
+    })
+}
+
+exports.getAllDevolutionsReturned=(req,res)=>{
+    Devolution.getAllDevolutionsReturned((err,devolutions)=>{
+        if(err){
+            res.send(err)
+        }else{
+            res.send(devolutions)
+        }
+    })
+}
+
+
 exports.getAllDevolutionsNotReturnedList=(req,res)=>{
     DevolutionPending.getAllDevolutionsNotReturned((err,devolutions)=>{
+        if(err){
+            res.send(err)
+        }else{
+            res.send(devolutions)
+        }
+    })
+}
+
+exports.getAllDevolutionsFromUser=(req,res)=>{
+    Devolution.getAllDevolutionsFromUser(req.params.id,(err,devolutions)=>{
         if(err){
             res.send(err)
         }else{
@@ -102,6 +138,22 @@ exports.updateDevolution=(req,res)=>{
             }
         })
     }
+}
+exports.updateStateDevolution=(req,res)=>{
+    const objeto=JSON.parse(req.params.idAndState);
+    const {id,state_devolucion}=objeto
+    DevolutionModel.updateStateDevolution(id,state_devolucion,(err,devolution)=>{
+        if(err){
+            res.send(err)
+            res.json({status:false, message:"No se pudo cambiar el estado de esta devolucion"});
+        }else{
+            res.json({
+                status:true,
+                message:'Devolucion Actualizada',
+                data:devolution
+            })
+        }
+    })
 }
 //Eliminando una devolucion
 exports.deleteDevolution=(req,res)=>{
